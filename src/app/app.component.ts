@@ -3,10 +3,19 @@ import { RouterOutlet } from '@angular/router';
 import { HeroComponent } from './hero/hero.component';
 import { NewsLetterComponent } from './news-letter/news-letter.component';
 import { FooterComponent } from './footer/footer.component';
+import { PricingComponent } from './pricing/pricing.component';
+import { TestimonialsComponent } from './testimonials/testimonials.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeroComponent, NewsLetterComponent, FooterComponent],
+  imports: [
+    RouterOutlet,
+    HeroComponent,
+    NewsLetterComponent,
+    FooterComponent,
+    PricingComponent,
+    TestimonialsComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
