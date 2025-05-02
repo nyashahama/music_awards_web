@@ -41,6 +41,25 @@
       <a href="#" class="text-sm/6 font-semibold text-gray-900">Artists</a>
       <a href="#" class="text-sm/6 font-semibold text-gray-900">Nominees</a>
       <a href="#" class="text-sm/6 font-semibold text-gray-900">About</a>
+
+      <a
+        [class.active]="activeLink === 'home'"
+        routerLink="/home"
+        class="text-sm/6 font-semibold text-green-600"
+        >Home</a
+      >
+      <a
+        [class.active]="activeLink === 'awards'"
+        routerLink="/awards"
+        class="text-sm/6 font-semibold text-gray-900"
+        >Awards</a
+      >
+      <a
+        [class.active]="activeLink === 'contact'"
+        routerLink="/contact"
+        class="text-sm/6 font-semibold text-gray-900"
+        >Contact</a
+      >
     </div>
     <div class="hidden lg:flex lg:flex-1 lg:justify-end">
       <a href="#" class="text-sm/6 font-semibold text-gray-900"

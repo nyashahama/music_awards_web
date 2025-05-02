@@ -5,6 +5,7 @@ import { NewsLetterComponent } from './news-letter/news-letter.component';
 import { FooterComponent } from './footer/footer.component';
 import { PricingComponent } from './pricing/pricing.component';
 import { TestimonialsComponent } from './testimonials/testimonials.component';
+import { AwardsComponent } from './awards/awards.component';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,7 @@ import { TestimonialsComponent } from './testimonials/testimonials.component';
     FooterComponent,
     PricingComponent,
     TestimonialsComponent,
+    AwardsComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',

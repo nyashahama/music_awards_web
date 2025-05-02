@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-awards',
-  imports: [],
+  imports: [HeaderComponent],
   templateUrl: './awards.component.html',
-  styles: ``
+  styles: ``,
 })
 export class AwardsComponent {
-
+  @Input() activeLink: string = '';
 }

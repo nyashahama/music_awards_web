@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-artist',
   imports: [],
   templateUrl: './artist.component.html',
-  styles: ``
+  styles: ``,
 })
 export class ArtistComponent {
-
+  @Input() activeLink: string = '';
 }
