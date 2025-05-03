@@ -37,23 +37,44 @@
       </button>
     </div>
     <div class="hidden lg:flex lg:gap-x-12">
-      <!-- Desktop Menu -->
-      <a routerLink="/" class="text-sm/6 font-semibold text-green-600">Home</a>
-      <a routerLink="/artist" class="text-sm/6 font-semibold text-gray-900"
+      <!-- Desktop Menu with routerLinkActive -->
+      <a
+        routerLink="/"
+        routerLinkActive="text-green-600"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="text-sm/6 font-semibold text-gray-900"
+        >Home</a
+      >
+      <a
+        routerLink="/artist"
+        routerLinkActive="text-green-600"
+        class="text-sm/6 font-semibold text-gray-900"
         >Artists</a
       >
-      <a routerLink="/awards" class="text-sm/6 font-semibold text-gray-900"
+      <a
+        routerLink="/awards"
+        routerLinkActive="text-green-600"
+        class="text-sm/6 font-semibold text-gray-900"
         >Awards</a
       >
-      <a routerLink="/nominees" class="text-sm/6 font-semibold text-gray-900"
+      <a
+        routerLink="/nominees"
+        routerLinkActive="text-green-600"
+        class="text-sm/6 font-semibold text-gray-900"
         >Nominees</a
       >
-      <a routerLink="/about" class="text-sm/6 font-semibold text-gray-900"
+      <a
+        routerLink="/about"
+        routerLinkActive="text-green-600"
+        class="text-sm/6 font-semibold text-gray-900"
         >About</a
       >
     </div>
     <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-      <a routerLink="/register" class="text-sm/6 font-semibold text-gray-900"
+      <a
+        routerLink="/register"
+        routerLinkActive="text-green-600"
+        class="text-sm/6 font-semibold text-gray-900"
         >Vote Now <span aria-hidden="true">&rarr;</span></a
       >
     </div>
@@ -96,23 +117,35 @@
       <div class="mt-6 flow-root">
         <div class="-my-6 divide-y divide-gray-500/10">
           <div class="space-y-2 py-6">
+            <!-- Mobile menu with routerLinkActive -->
+            <a
+              routerLink="/"
+              routerLinkActive="text-green-600"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+              >Home</a
+            >
             <a
               routerLink="/awards"
-              class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-green-600 hover:bg-gray-50"
+              routerLinkActive="text-green-600"
+              class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
               >Awards</a
             >
             <a
               routerLink="/artist"
+              routerLinkActive="text-green-600"
               class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
               >Artists</a
             >
             <a
               routerLink="/nominees"
+              routerLinkActive="text-green-600"
               class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
               >Nominees</a
             >
             <a
               routerLink="/about"
+              routerLinkActive="text-green-600"
               class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
               >About</a
             >
@@ -120,6 +153,7 @@
           <div class="py-6">
             <a
               routerLink="/register"
+              routerLinkActive="text-green-600"
               class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
               >Vote Now</a
             >
