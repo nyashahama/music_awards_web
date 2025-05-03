@@ -37,32 +37,23 @@
       </button>
     </div>
     <div class="hidden lg:flex lg:gap-x-12">
-      <a href="#" class="text-sm/6 font-semibold text-green-600">Awards</a>
-      <a href="#" class="text-sm/6 font-semibold text-gray-900">Artists</a>
-      <a href="#" class="text-sm/6 font-semibold text-gray-900">Nominees</a>
-      <a href="#" class="text-sm/6 font-semibold text-gray-900">About</a>
-
-      <a
-        [class.active]="activeLink === 'home'"
-        routerLink="/home"
-        class="text-sm/6 font-semibold text-green-600"
-        >Home</a
+      <!-- Desktop Menu -->
+      <a routerLink="/" class="text-sm/6 font-semibold text-green-600">Home</a>
+      <a routerLink="/artist" class="text-sm/6 font-semibold text-gray-900"
+        >Artists</a
       >
-      <a
-        [class.active]="activeLink === 'awards'"
-        routerLink="/awards"
-        class="text-sm/6 font-semibold text-gray-900"
+      <a routerLink="/awards" class="text-sm/6 font-semibold text-gray-900"
         >Awards</a
       >
-      <a
-        [class.active]="activeLink === 'contact'"
-        routerLink="/contact"
-        class="text-sm/6 font-semibold text-gray-900"
-        >Contact</a
+      <a routerLink="/nominees" class="text-sm/6 font-semibold text-gray-900"
+        >Nominees</a
+      >
+      <a routerLink="/about" class="text-sm/6 font-semibold text-gray-900"
+        >About</a
       >
     </div>
     <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-      <a href="#" class="text-sm/6 font-semibold text-gray-900"
+      <a routerLink="/register" class="text-sm/6 font-semibold text-gray-900"
         >Vote Now <span aria-hidden="true">&rarr;</span></a
       >
     </div>
@@ -106,29 +97,29 @@
         <div class="-my-6 divide-y divide-gray-500/10">
           <div class="space-y-2 py-6">
             <a
-              href="#"
+              routerLink="/awards"
               class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-green-600 hover:bg-gray-50"
               >Awards</a
             >
             <a
-              href="#"
+              routerLink="/artist"
               class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
               >Artists</a
             >
             <a
-              href="#"
+              routerLink="/nominees"
               class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
               >Nominees</a
             >
             <a
-              href="#"
+              routerLink="/about"
               class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
               >About</a
             >
           </div>
           <div class="py-6">
             <a
-              href="#"
+              routerLink="/register"
               class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
               >Vote Now</a
             >
