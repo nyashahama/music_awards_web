@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeroComponent } from './hero/hero.component';
-import { NewsLetterComponent } from './news-letter/news-letter.component';
-import { FooterComponent } from './footer/footer.component';
-import { PricingComponent } from './pricing/pricing.component';
-import { TestimonialsComponent } from './testimonials/testimonials.component';
-import { AwardsComponent } from './awards/awards.component';
+import { HeroComponent } from './pages/hero/hero.component';
+import { NewsLetterComponent } from './pages/news-letter/news-letter.component';
+import { FooterComponent } from './pages/footer/footer.component';
+import { PricingComponent } from './pages/pricing/pricing.component';
+import { TestimonialsComponent } from './pages/testimonials/testimonials.component';
+import { AwardsComponent } from './pages/awards/awards.component';
 
 @Component({
   selector: 'app-root',

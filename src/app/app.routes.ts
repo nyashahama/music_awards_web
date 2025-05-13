@@ -1,26 +1,27 @@
 import { Routes } from '@angular/router';
-import { AboutComponent } from './about/about.component';
-import { HomeComponent } from './home/home.component';
-import { ArtistComponent } from './artist/artist.component';
-import { AwardsComponent } from './awards/awards.component';
-import { ContactComponent } from './contact/contact.component';
-import { ErrorsComponent } from './errors/errors.component';
-import { NomineesComponent } from './nominees/nominees.component';
-import { PricingComponent } from './pricing/pricing.component';
-import { StatsComponent } from './stats/stats.component';
-import { TeamComponent } from './team/team.component';
-import { TestimonialsComponent } from './testimonials/testimonials.component';
-import { RegisterComponent } from './register/register.component';
-import { LoginComponent } from './login/login.component';
+import { AboutComponent } from './pages/about/about.component';
+import { HomeComponent } from './pages/home/home.component';
+
+import { AwardsComponent } from './pages/awards/awards.component';
+import { ContactComponent } from './pages/contact/contact.component';
+import { ErrorsComponent } from './pages/errors/errors.component';
+import { NomineesComponent } from './pages/nominees/nominees.component';
+import { PricingComponent } from './pages/pricing/pricing.component';
+import { StatsComponent } from './pages/stats/stats.component';
+import { TeamComponent } from './pages/team/team.component';
+import { TestimonialsComponent } from './pages/testimonials/testimonials.component';
+import { RegisterComponent } from './pages/register/register.component';
+import { LoginComponent } from './pages/login/login.component';
+import { ArtistComponent } from './pages/artist/artist.component';
 
 // Update your routes array
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'about', component: AboutComponent },
+
   {
     path: 'artist',
-    loadComponent: () =>
-      import('./artist/artist.component').then((m) => m.ArtistComponent),
+    component: ArtistComponent,
   },
   { path: 'awards', component: AwardsComponent },
   { path: 'contact', component: ContactComponent },
