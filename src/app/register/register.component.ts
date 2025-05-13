@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
-  imports: [RouterModule],
+  imports: [FormsModule],
   templateUrl: './register.component.html',
-  styles: ``,
+  styleUrls: [],
 })
 export class RegisterComponent {}

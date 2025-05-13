@@ -125,3 +125,108 @@
     </p>
   </div>
 </div>
+
+<!-- New King -->
+
+<!-- <div class="auth-container">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+    <div class="form-header">
+      <h2>Create Your Account</h2>
+      <p>Join the Zimdancehall Music Awards community</p>
+    </div>
+
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        id="username"
+        formControlName="username"
+        placeholder="Enter your username"
+        [class.invalid]="
+          registerForm.get('username')?.invalid &&
+          registerForm.get('username')?.touched
+        "
+      />
+      <div
+        *ngIf="registerForm.get('username')?.errors"
+        class="validation-error"
+      >
+        {{ validationService.getErrorMessage(registerForm, "username") }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        formControlName="email"
+        placeholder="Enter your email"
+        [class.invalid]="
+          registerForm.get('email')?.invalid &&
+          registerForm.get('email')?.touched
+        "
+      />
+      <div *ngIf="registerForm.get('email')?.errors" class="validation-error">
+        {{ validationService.getErrorMessage(registerForm, "email") }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        formControlName="password"
+        placeholder="Enter your password (min 6 characters)"
+        [class.invalid]="
+          registerForm.get('password')?.invalid &&
+          registerForm.get('password')?.touched
+        "
+      />
+      <div
+        *ngIf="registerForm.get('password')?.errors"
+        class="validation-error"
+      >
+        {{ validationService.getErrorMessage(registerForm, "password") }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="confirmPassword">Confirm Password</label>
+      <input
+        type="password"
+        id="confirmPassword"
+        formControlName="confirmPassword"
+        placeholder="Confirm your password"
+        [class.invalid]="
+          registerForm.get('confirmPassword')?.invalid &&
+          registerForm.get('confirmPassword')?.touched
+        "
+      />
+      <div *ngIf="registerForm.hasError('mismatch')" class="validation-error">
+        Passwords do not match
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="submit-button"
+      [disabled]="registerForm.invalid || loading"
+    >
+      <span *ngIf="!loading">Create Account</span>
+      <span *ngIf="loading">Creating Account...</span>
+    </button>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <div class="auth-footer">
+      <p>
+        Already have an account?
+        <a routerLink="/login" class="auth-link">Sign in</a>
+      </p>
+    </div>
+  </form>
+</div> -->
