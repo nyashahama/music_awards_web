@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: [],
 })
 export class RegisterComponent {
-  registerForm: FormGroup;
+  registerForm!: FormGroup;
   loading = false;
   errorMsg = '';
 
