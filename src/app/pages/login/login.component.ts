@@ -5,10 +5,11 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrls: [],
 })
