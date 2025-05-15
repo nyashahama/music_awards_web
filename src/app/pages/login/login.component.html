@@ -1,26 +1,31 @@
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
   <div class="sm:mx-auto sm:w-full sm:max-w-sm">
     <img
-      class="mx-auto h-16 w-auto"
+      class="mx-auto h-16 w-auto object-contain"
       src="/api/placeholder/160/160"
       alt="Zimdancehall Music Awards"
     />
     <h2
-      class="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900"
+      class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
     >
       Sign in to your account
     </h2>
+    <p class="mt-2 text-center text-sm text-gray-600">
+      Access your Zimdancehall Music Awards account
+    </p>
   </div>
+
   <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-    <form class="space-y-6" [formGroup]="loginForm" (ngSubmit)="signIn()">
+    <form class="space-y-5" [formGroup]="loginForm" (ngSubmit)="signIn()">
       <div>
         <label
           for="loginIdentifier"
           class="block text-sm font-medium text-gray-700"
         >
           Email or Username
+          <span class="text-red-500">*</span>
         </label>
-        <div class="mt-2">
+        <div class="mt-1">
           <input
             type="text"
             id="loginIdentifier"
@@ -28,30 +33,31 @@
             autocomplete="username"
             required
             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            placeholder="Enter your email or username"
           />
           @if (loginForm.get('loginIdentifier')?.invalid &&
           loginForm.get('loginIdentifier')?.touched) {
-          <div class="text-red-500 text-sm mt-1">
-            Email or Username is required.
-          </div>
+          <p class="mt-1 text-sm text-red-600">Email or Username is required</p>
           }
         </div>
       </div>
+
       <div>
         <div class="flex items-center justify-between">
           <label for="password" class="block text-sm font-medium text-gray-700">
             Password
+            <span class="text-red-500">*</span>
           </label>
           <div class="text-sm">
             <a
               href="#"
-              class="font-semibold text-indigo-600 hover:text-indigo-500"
+              class="font-semibold text-indigo-600 hover:text-indigo-500 underline underline-offset-2"
             >
               Forgot password?
             </a>
           </div>
         </div>
-        <div class="mt-2">
+        <div class="mt-1">
           <input
             type="password"
             id="password"
@@ -59,41 +65,68 @@
             autocomplete="current-password"
             required
             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            placeholder="Enter your password"
           />
           @if (loginForm.get('password')?.errors?.['required'] &&
           loginForm.get('password')?.touched) {
-          <div class="text-red-500 text-sm mt-1">Password is required.</div>
+          <p class="mt-1 text-sm text-red-600">Password is required</p>
           } @if (loginForm.get('password')?.errors?.['minlength']) {
-          <div class="text-red-500 text-sm mt-1">
-            Password must be at least 8 characters.
-          </div>
+          <p class="mt-1 text-sm text-red-600">
+            Password must be at least 8 characters
+          </p>
           } @if (loginForm.get('password')?.errors?.['pattern']) {
-          <div class="text-red-500 text-sm mt-1">
-            Password must include letters, numbers, and special characters.
-          </div>
+          <p class="mt-1 text-sm text-red-600">
+            Password must include letters, numbers, and special characters
+          </p>
           }
         </div>
       </div>
-      <div>
+
+      <div class="mt-6">
         <button
           type="submit"
-          [disabled]="loading"
-          class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          [disabled]="loading || loginForm.invalid"
+          class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-indigo-300 disabled:cursor-not-allowed"
         >
+          @if(loading) {
+          <svg
+            class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          }
           {{ loading ? "Signing in..." : "Sign in" }}
         </button>
         @if (errorMsg) {
-        <div class="text-red-500 text-sm mt-2 text-center">
+        <div
+          class="mt-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm"
+        >
           {{ errorMsg }}
         </div>
         }
       </div>
     </form>
-    <p class="mt-10 text-center text-sm text-gray-500">
+
+    <p class="mt-8 text-center text-sm text-gray-500">
       Don't have an account?
       <a
         routerLink="/register"
-        class="font-semibold text-indigo-600 hover:text-indigo-500"
+        class="font-semibold text-indigo-600 hover:text-indigo-500 underline underline-offset-2"
       >
         Register now
       </a>
