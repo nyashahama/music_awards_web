@@ -40,38 +40,34 @@ export class LoginComponent {
     return emailRegex.test(value);
   }
 
-  signIn() {
-    if (this.loginForm.invalid) return;
-    this.loading = true;
-    const { loginIdentifier, password } = this.loginForm.value;
-    const payload = this.isEmail(loginIdentifier)
-      ? { email: loginIdentifier, password }
-      : { username: loginIdentifier, password };
 
-    this.authService.login(payload).subscribe({
-      next: () => {
-        // success toast
-        this.snackBar.open(
-          'Welcome back!', // message
-          'Close', // action label
-          {
-            duration: 3000,
-            verticalPosition: 'top',
-          }
-        );
-        this.router.navigate(['/home']);
-      },
-      error: (err) => {
-        this.errorMsg =
-          err.error?.message || 'Login failed. Please check your credentials.';
-        // error toast
-        this.snackBar.open(this.errorMsg, 'Close', {
-          duration: 5000,
-          verticalPosition: 'top',
-          panelClass: ['snack-error'], // optional custom CSS class
-        });
-        this.loading = false;
-      },
-    });
-  }
+signIn() {
+  if (this.loginForm.invalid) return;
+
+  this.loading = true;
+  const { loginIdentifier, password } = this.loginForm.value;
+  const payload = this.isEmail(loginIdentifier)
+    ? { email: loginIdentifier, password }
+    : { username: loginIdentifier, password };
+
+  this.authService.login(payload).subscribe({
+    next: () => {
+      this.snackBar.open('Welcome back!', 'Close', {
+        duration: 3000,
+        verticalPosition: 'top',
+      });
+      this.router.navigate(['/home']);
+    },
+    error: err => {
+      this.errorMsg =
+        err.error?.message || 'Login failed. Please check your credentials.';
+      this.snackBar.open(this.errorMsg, 'Close', {
+        duration: 5000,
+        verticalPosition: 'top',
+        panelClass: ['snack-error'],
+      });
+      this.loading = false;
+    },
+  });
+}
 }
