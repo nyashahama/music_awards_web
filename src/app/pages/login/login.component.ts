@@ -51,12 +51,14 @@ signIn() {
     : { username: loginIdentifier, password };
 
   this.authService.login(payload).subscribe({
-    next: () => {
+    next: (res) => {
       this.snackBar.open('Welcome back!', 'Close', {
         duration: 3000,
         verticalPosition: 'top',
       });
-      this.router.navigate(['/home']);
+      const token = res.token;
+      console.log('JWT Token:', token);
+      this.router.navigate(['/']);
     },
     error: err => {
       this.errorMsg =
