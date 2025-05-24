@@ -11,13 +11,13 @@ import { AuthService } from '../../cores/services/auth.service';
 import { Router } from '@angular/router';
 
 interface UserProfile {
-  id?: string;
-  firstName: string;
-  lastName: string;
+  user_id?: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
   username: string;
   avatar?: string;
-  timezone: string;
+  timezone?: string;
   bio?: string;
   joinedDate?: Date;
   votingHistory?: VotingRecord[];
@@ -77,8 +77,13 @@ export class UserProfileComponent implements OnInit {
   loadUserProfile(): void {
     this.authService.getCurrentProfile().subscribe({
       next: (user: UserProfile) => {
+        console.log('Received user data:', user);
         this.user = user;
-        this.userId = user.id;
+        this.userId = user.user_id;
+        if (!this.userId) {
+          console.log('User Id not found in response');
+          return;
+        }
         this.profileForm.patchValue({
           firstName: user.firstName,
           lastName: user.lastName,
@@ -95,43 +100,47 @@ export class UserProfileComponent implements OnInit {
   }
 
   updateProfile(): void {
+    console.log('Submitting:', this.profileForm.value);
+    console.log('User ID:', this.userId);
     if (this.profileForm.valid && this.userId) {
       this.isLoading = true;
+      this.errorMessage = '';
 
       this.authService
         .updateUserProfile(this.userId, this.profileForm.value)
         .subscribe({
-          next: (updatedUser: UserProfile) => {
+          next: (updatedUser) => {
             this.user = updatedUser;
             this.isLoading = false;
             this.showSuccessMessage = true;
             setTimeout(() => (this.showSuccessMessage = false), 3000);
           },
           error: (err) => {
-            console.error('Update failed:', err);
+            console.error('Update error:', err);
             this.isLoading = false;
+            this.errorMessage =
+              err.error?.message || 'Failed to update profile';
           },
         });
+    } else {
+      console.log('Form invalid or missing user ID');
+      this.profileForm.markAllAsTouched();
     }
   }
-
   deleteAccount(): void {
-    if (
-      confirm(
-        'Are you sure you want to delete your account? This action cannot be undone.'
-      ) &&
-      this.userId
-    ) {
+    if (confirm('Delete confirmation...') && this.userId) {
       this.authService.deleteUserProfile(this.userId).subscribe({
         next: () => {
           this.authService.logout();
           this.router.navigate(['/login']);
         },
-        error: (err) => console.error('Delete failed:', err),
+        error: (err) => {
+          console.error('Delete error:', err);
+          this.errorMessage = err.error?.message || 'Account deletion failed';
+        },
       });
     }
   }
-
   triggerFileInput(): void {
     const fileInput = document.querySelector(
       'input[type="file"]'
