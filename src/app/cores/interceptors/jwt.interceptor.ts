@@ -1,24 +1,35 @@
 import { inject } from '@angular/core';
 import { HttpInterceptorFn } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
+  const router = inject(Router);
   const token = authService.getToken();
 
-  if (token && isTokenExpired(token)) {
-    authService.logout();
-    return next(req);
+  if (token) {
+    if (isTokenExpired(token)) {
+      authService.logout();
+      router.navigate(['/login']); // Add redirect
+      return next(req); // Or return EMPTY to cancel request
+    }
+
+    return next(
+      req.clone({
+        setHeaders: { Authorization: `Bearer ${token}` },
+      })
+    );
   }
 
-  const authReq = token ? req.clone({
-    setHeaders: { Authorization: `Bearer ${token}` }
-  }) : req;
-
-  return next(authReq);
+  return next(req);
 };
 
 function isTokenExpired(token: string): boolean {
-  const payload = JSON.parse(atob(token.split('.')[1]));
-  return payload.exp < (Date.now() / 1000);
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.exp < Math.floor(Date.now() / 1000);
+  } catch {
+    return true; // Treat invalid tokens as expired
+  }
 }

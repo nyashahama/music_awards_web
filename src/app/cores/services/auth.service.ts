@@ -66,7 +66,11 @@ export class AuthService {
 
   //Retrieve the JWT from localStorage
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    try {
+      return localStorage.getItem(this.TOKEN_KEY);
+    } catch {
+      return null;
+    }
   }
 
   // to check if loggedIn?

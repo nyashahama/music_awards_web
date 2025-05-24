@@ -13,7 +13,7 @@ import { TestimonialsComponent } from './pages/testimonials/testimonials.compone
 import { RegisterComponent } from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ArtistComponent } from './pages/artist/artist.component';
-import { UserProfileComponent } from './user-profile/user-profile.component';
+import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 
 // Update your routes array
 export const routes: Routes = [
@@ -33,7 +33,7 @@ export const routes: Routes = [
   { path: 'testimonials', component: TestimonialsComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'profile', component: UserProfileComponent},
+  { path: 'profile', component: UserProfileComponent },
   { path: '404', component: ErrorsComponent },
   { path: '**', redirectTo: '/404' },
 ];
