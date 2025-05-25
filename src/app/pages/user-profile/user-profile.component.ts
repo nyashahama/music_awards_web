@@ -61,12 +61,8 @@ export class UserProfileComponent implements OnInit {
     private router: Router
   ) {
     this.profileForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.minLength(2)]],
-      lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       username: ['', [Validators.required, Validators.minLength(3)]],
-      bio: [''],
-      timezone: ['America/New_York', Validators.required],
     });
   }
 
@@ -106,22 +102,24 @@ export class UserProfileComponent implements OnInit {
       this.isLoading = true;
       this.errorMessage = '';
 
-      this.authService
-        .updateUserProfile(this.userId, this.profileForm.value)
-        .subscribe({
-          next: (updatedUser) => {
-            this.user = updatedUser;
-            this.isLoading = false;
-            this.showSuccessMessage = true;
-            setTimeout(() => (this.showSuccessMessage = false), 3000);
-          },
-          error: (err) => {
-            console.error('Update error:', err);
-            this.isLoading = false;
-            this.errorMessage =
-              err.error?.message || 'Failed to update profile';
-          },
-        });
+      const updatedData = {
+        username: this.profileForm.value.username,
+        email: this.profileForm.value.email,
+      };
+
+      this.authService.updateUserProfile(this.userId, updatedData).subscribe({
+        next: (updatedUser) => {
+          this.user = { ...this.user, ...updatedUser };
+          this.isLoading = false;
+          this.showSuccessMessage = true;
+          setTimeout(() => (this.showSuccessMessage = false), 3000);
+        },
+        error: (err) => {
+          console.error('Update error:', err);
+          this.isLoading = false;
+          this.errorMessage = err.error?.message || 'Failed to update profile';
+        },
+      });
     } else {
       console.log('Form invalid or missing user ID');
       this.profileForm.markAllAsTouched();
