@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,14 @@ export class AwardsService {
   constructor(private http: HttpClient) {}
 
   listCategories(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/categories`);
+    return this.http.get(`${this.apiUrl}/categories`).pipe(
+      map((response: any) =>
+        response.map((category: any) => ({
+          name: category.Name || category.name,
+          description: category.Description || category.description,
+        }))
+      )
+    );
   }
 
   listActivecategories(active: boolean): Observable<any> {
