@@ -16,7 +16,7 @@ export class AwardsComponent implements OnInit {
   categories: any[] = [];
   errorMessage: string = '';
 
-  constructor(private awardsService: AwardsService) {}
+  constructor(private awardsService: AwardsService) { }
 
   ngOnInit(): void {
     this.awardsService.listCategories().subscribe({

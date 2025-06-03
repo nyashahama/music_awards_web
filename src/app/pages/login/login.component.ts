@@ -41,35 +41,35 @@ export class LoginComponent {
   }
 
 
-signIn() {
-  if (this.loginForm.invalid) return;
+  signIn() {
+    if (this.loginForm.invalid) return;
 
-  this.loading = true;
-  const { loginIdentifier, password } = this.loginForm.value;
-  const payload = this.isEmail(loginIdentifier)
-    ? { email: loginIdentifier, password }
-    : { username: loginIdentifier, password };
+    this.loading = true;
+    const { loginIdentifier, password } = this.loginForm.value;
+    const payload = this.isEmail(loginIdentifier)
+      ? { email: loginIdentifier, password }
+      : { username: loginIdentifier, password };
 
-  this.authService.login(payload).subscribe({
-    next: (res) => {
-      this.snackBar.open('Welcome back!', 'Close', {
-        duration: 3000,
-        verticalPosition: 'top',
-      });
-      const token = res.token;
-      console.log('JWT Token:', token);
-      this.router.navigate(['/']);
-    },
-    error: err => {
-      this.errorMsg =
-        err.error?.message || 'Login failed. Please check your credentials.';
-      this.snackBar.open(this.errorMsg, 'Close', {
-        duration: 5000,
-        verticalPosition: 'top',
-        panelClass: ['snack-error'],
-      });
-      this.loading = false;
-    },
-  });
-}
+    this.authService.login(payload).subscribe({
+      next: (res) => {
+        this.snackBar.open('Welcome back!', 'Close', {
+          duration: 3000,
+          verticalPosition: 'top',
+        });
+        const token = res.token;
+        console.log('JWT Token:', token);
+        this.router.navigate(['/']);
+      },
+      error: err => {
+        this.errorMsg =
+          err.error?.message || 'Login failed. Please check your credentials.';
+        this.snackBar.open(this.errorMsg, 'Close', {
+          duration: 5000,
+          verticalPosition: 'top',
+          panelClass: ['snack-error'],
+        });
+        this.loading = false;
+      },
+    });
+  }
 }
