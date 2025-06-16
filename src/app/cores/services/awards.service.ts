@@ -40,4 +40,23 @@ export class AwardsService {
   deleteCategory(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/categories/${id}`);
   }
+
+
+  // to be removed
+listNominees(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/nominees`).pipe(
+      map((response: any) =>
+        response.map((nominee: any) => ({
+          id: nominee.nominee_id,
+          name: nominee.name,
+          description: nominee.description,
+          imageUrl: nominee.image_url
+        }))
+      )
+    );
+  }
+
+  getNomineeDetails(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/nominees/${id}`);
+  }
 }

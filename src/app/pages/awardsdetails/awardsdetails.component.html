@@ -1,0 +1,43 @@
+<!-- artist-details.component.html -->
+<div class="bg-white">
+  <app-header activeLink="artists"></app-header>
+
+  <div class="relative isolate px-6 pt-14 lg:px-8">
+    <!-- Background decorations same as other pages -->
+
+    <div class="mx-auto max-w-7xl py-24 sm:py-32">
+      @if (loading) {
+      <div class="text-center">Loading artist details...</div>
+      } @if (error) {
+      <div class="text-center text-red-600">{{ error }}</div>
+      } @if (nominee && !loading) {
+      <div class="flex flex-col items-center">
+        <img
+          class="h-64 w-64 rounded-full object-cover shadow-xl"
+          [src]="nominee.image_url || '/assets/placeholder-artist.png'"
+          [alt]="nominee.name"
+        />
+        <h1
+          class="mt-8 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl"
+        >
+          {{ nominee.name }}
+        </h1>
+
+        <div class="mt-8 max-w-2xl text-center">
+          <p class="text-lg leading-8 text-gray-600">
+            {{ nominee.description || "Zimdancehall artist" }}
+          </p>
+        </div>
+
+        <div class="mt-12 w-full max-w-4xl">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">Sample Works</h2>
+          <!-- Display sample works here -->
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+
+  <app-news-letter></app-news-letter>
+  <app-footer></app-footer>
+</div>

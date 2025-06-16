@@ -14,6 +14,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ArtistComponent } from './pages/artist/artist.component';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
+import { AwardsdetailsComponent } from './pages/awardsdetails/awardsdetails.component';
 
 // Update your routes array
 export const routes: Routes = [
@@ -25,6 +26,7 @@ export const routes: Routes = [
     component: ArtistComponent,
   },
   { path: 'awards', component: AwardsComponent },
+  {path: 'awards/:id', component: AwardsdetailsComponent},
   { path: 'contact', component: ContactComponent },
   { path: 'nominees', component: NomineesComponent },
   { path: 'pricing', component: PricingComponent },
