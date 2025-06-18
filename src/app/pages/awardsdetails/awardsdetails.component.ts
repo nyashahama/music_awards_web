@@ -1,13 +1,20 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AwardsService } from '../../cores/services/awards.service';
 import { NewsLetterComponent } from '../news-letter/news-letter.component';
 import { FooterComponent } from '../footer/footer.component';
 import { HeaderComponent } from '../header/header.component';
+import { ArtistService } from '../../cores/services/artist.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-awardsdetails',
-  imports: [NewsLetterComponent, FooterComponent, HeaderComponent],
+  standalone: true,
+  imports: [
+    CommonModule,
+    NewsLetterComponent,
+    FooterComponent,
+    HeaderComponent
+  ],
   templateUrl: './awardsdetails.component.html',
   styleUrl: './awardsdetails.component.css',
 })
@@ -18,13 +25,13 @@ export class AwardsdetailsComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private awardsService: AwardsService
+    private artistService: ArtistService
   ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.awardsService.getNomineeDetails(id).subscribe({
+      this.artistService.getNomineeDetails(id).subscribe({
         next: (data) => {
           this.nominee = data;
           this.loading = false;
@@ -32,9 +39,12 @@ export class AwardsdetailsComponent {
         error: (err) => {
           this.error = 'Failed to load artist details';
           this.loading = false;
-          console.error(err);
+          console.error('Error loading artist:', err);
         },
       });
+    } else {
+      this.error = 'Invalid artist ID';
+      this.loading = false;
     }
   }
 }

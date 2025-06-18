@@ -3,8 +3,6 @@
   <app-header activeLink="artists"></app-header>
 
   <div class="relative isolate px-6 pt-14 lg:px-8">
-    <!-- Background decorations same as other pages -->
-
     <div class="mx-auto max-w-7xl py-24 sm:py-32">
       @if (loading) {
       <div class="text-center">Loading artist details...</div>
@@ -12,27 +10,49 @@
       <div class="text-center text-red-600">{{ error }}</div>
       } @if (nominee && !loading) {
       <div class="flex flex-col items-center">
+        <!-- Artist Image -->
         <img
           class="h-64 w-64 rounded-full object-cover shadow-xl"
           [src]="nominee.image_url || '/assets/placeholder-artist.png'"
           [alt]="nominee.name"
+          onerror="this.src='/assets/placeholder-artist.png'"
         />
-        <h1
-          class="mt-8 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl"
-        >
+
+        <!-- Artist Name -->
+        <h1 class="mt-8 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
           {{ nominee.name }}
         </h1>
 
+        <!-- Artist Description -->
         <div class="mt-8 max-w-2xl text-center">
           <p class="text-lg leading-8 text-gray-600">
             {{ nominee.description || "Zimdancehall artist" }}
           </p>
         </div>
 
+        <!-- Sample Works -->
         <div class="mt-12 w-full max-w-4xl">
           <h2 class="text-2xl font-bold text-gray-900 mb-6">Sample Works</h2>
-          <!-- Display sample works here -->
+          <ul class="list-disc pl-5 space-y-2">
+            @for (work of nominee.sample_works; track work) {
+            <li class="text-lg leading-8 text-gray-600">{{ work }}</li>
+            }
+          </ul>
         </div>
+
+        <!-- Nominated Categories -->
+        @if (nominee.categories && nominee.categories.length > 0) {
+        <div class="mt-8 w-full max-w-4xl">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">Nominated Categories</h2>
+          <div class="flex flex-wrap gap-2">
+            @for (category of nominee.categories; track category.category_id) {
+            <span class="inline-flex items-center rounded-full bg-green-50 px-3 py-1 text-sm font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+              {{ category.name }}
+            </span>
+            }
+          </div>
+        </div>
+        }
       </div>
       }
     </div>
