@@ -20,7 +20,7 @@ export class ArtistComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   private subscription: Subscription = new Subscription();
 
-  constructor(private artistService: ArtistService) {}
+  constructor(private artistService: ArtistService) { }
 
   ngOnInit(): void {
     this.loadNominees();
@@ -34,7 +34,7 @@ export class ArtistComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.errorMessage = '';
 
-    const sub = this.artistService.listAllNominees().subscribe({
+    const sub = this.artistService.listNominees().subscribe({
       next: (data: Nominee[]) => {
         this.nominees = data;
         this.loading = false;
@@ -51,27 +51,36 @@ export class ArtistComponent implements OnInit, OnDestroy {
   }
 
   onImageError(event: any): void {
-    console.log('Image failed to load:', event.target.src); // Debug log
-    event.target.src = '/assets/placeholder-artist.png';
-  }
+    console.log('Image failed to load:', event.target.src);
 
+    // Fix: Handle Google image links
+    if (event.target.src.includes('images.app.goo.gl')) {
+      event.target.src = '/assets/placeholder-artist.png';
+    } else {
+      // Retry with placeholder
+      event.target.src = '/assets/placeholder-artist.png';
+    }
+  }
   // Helper method to get a safe image URL
   getSafeImageUrl(imageUrl: string | null | undefined): string {
     if (!imageUrl) {
       return '/assets/placeholder-artist.png';
     }
 
-    // Check if it's a relative URL and make it absolute
-    if (imageUrl.startsWith('/') && !imageUrl.startsWith('//')) {
-      return `https://music-awards-api.onrender.com${imageUrl}`;
+    // Handle Google image URLs
+    if (imageUrl.includes('images.app.goo.gl')) {
+      return '/assets/placeholder-artist.png';
     }
 
-    // If it's already a full URL, return as is
+    // Handle absolute URLs
     if (imageUrl.startsWith('http')) {
       return imageUrl;
     }
 
-    // If it's a relative path without leading slash
-    return `https://music-awards-api.onrender.com/${imageUrl}`;
+    // Handle relative paths
+    const baseUrl = 'https://music-awards-api.onrender.com';
+    return imageUrl.startsWith('/')
+      ? `${baseUrl}${imageUrl}`
+      : `${baseUrl}/${imageUrl}`;
   }
 }
