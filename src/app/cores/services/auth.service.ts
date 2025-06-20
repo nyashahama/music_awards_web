@@ -8,7 +8,7 @@ import { LoginPayload } from '../../models/Login.payload';
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly apiUrl = 'https://music-awards-api.onrender.com/api';
+  private readonly apiUrl = "https://music-awards-server.onrender.com/api";
 
   private readonly TOKEN_KEY = 'jwt_token';
   private currentUserSubject = new BehaviorSubject<string | null>(null);
