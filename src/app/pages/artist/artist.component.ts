@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-//import { ArtistService, Nominee } from './artist.service';
+import { RouterLink, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ArtistService, Nominee } from '../../cores/services/artist.service';
 import { HeaderComponent } from '../header/header.component';
@@ -11,7 +10,7 @@ import { FooterComponent } from '../footer/footer.component';
 @Component({
   selector: 'app-artist',
   standalone: true,
-  imports: [CommonModule, RouterModule, HeaderComponent, NewsLetterComponent, FooterComponent],
+  imports: [CommonModule, RouterModule, HeaderComponent, NewsLetterComponent, FooterComponent, RouterLink],
   templateUrl: './artist.component.html',
 })
 export class ArtistComponent implements OnInit, OnDestroy {
