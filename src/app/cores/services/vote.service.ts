@@ -16,4 +16,14 @@ export class VoteService {
       category_id: categoryId,
       nominee_id: nomineeId
     });
-  }}
+  }
+
+  getUserVotes():Observable<any>{
+    return this.http.get(`${this.apiUrl}/votes`)
+  }
+
+  getAvailableVotes(): Observable<{available_votes:number}>{
+    return this.http.get<{available_votes: number}>(`${this.apiUrl}/votes/available`)
+  }
+
+}

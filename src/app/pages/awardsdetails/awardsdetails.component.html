@@ -13,15 +13,14 @@
         </div>
 
         <!-- Category Header -->
-        <div class="text-center mb-12">
-          <h1 class="text-3xl font-bold text-gray-900 sm:text-4xl">
-            {{ category()?.name ?? 'Loading...' }}
-          </h1>
-          <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
-            {{ category()?.description ?? 'Category description' }}
-          </p>
-        </div>
-
+       <div class="text-center mb-12">
+  <h1 class="text-3xl font-bold text-gray-900 sm:text-4xl">
+    {{ category?.name || 'Loading...' }}
+  </h1>
+  <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+    {{ category?.description || 'Category description' }}
+  </p>
+</div>
         <!-- Error Message -->
         @if (errorMessage) {
           <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
@@ -40,45 +39,69 @@
           </div>
         }
 
+<!-- Voting Progress -->
+@if (isLoggedIn) {
+<div class="mb-8 bg-gray-100 p-4 rounded-lg">
+  <div class="flex justify-between mb-2">
+    <span class="font-medium">Your voting progress</span>
+    <span>{{ completedCategories }}/{{ totalCategories }} categories</span>
+  </div>
+  <div class="h-2 bg-gray-300 rounded-full">
+    <div class="h-full bg-green-600 rounded-full"
+         [style.width.%]="(completedCategories/totalCategories)*100"></div>
+  </div>
+  <div class="mt-4 text-sm">
+    @if (availableVotes > 0) {
+      <span>You have {{ availableVotes }} {{ availableVotes === 1 ? 'vote' : 'votes' }} remaining</span>
+    }
+    @if (availableVotes === 0) {
+      <span class="text-red-600">You've used all your votes!</span>
+    }
+  </div>
+</div>
+}
         <!-- Nominees Grid -->
         @if (loading) {
           <div class="flex justify-center py-12">
             <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-600"></div>
           </div>
         } @else {
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            @for (nominee of nominees; track nominee.NomineeID) {
-              <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
-                <div class="p-6">
-                  <div class="flex justify-between items-start">
-                    <div>
-                      <h3 class="text-lg font-semibold text-gray-900">{{ nominee.Name }}</h3>
-                      <p class="mt-1 text-gray-600 text-sm">Nominated Artist</p>
-                    </div>
-                    <div class="bg-gray-100 rounded-full p-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                      </svg>
-                    </div>
-                  </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  @for (nominee of nominees; track nominee.id) {
+  <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow">
+    <div class="p-6">
+      <!-- Nominee Image -->
+      <div class="flex justify-center mb-4">
+        <img [src]="nominee.imageUrl || 'assets/placeholder-artist.jpg'"
+             alt="{{ nominee.name }}"
+             class="h-32 w-32 rounded-full object-cover border-4 border-green-100">
+      </div>
 
-                  <div class="mt-6 flex justify-center">
-                    <img [src]="nominee.ImageURL ?? 'assets/placeholder-artist.jpg'"
-                         alt="{{ nominee.Name }}"
-                         class="h-40 w-40 rounded-full object-cover border-4 border-green-100">
-                  </div>
+      <!-- Nominee Info -->
+      <h3 class="text-xl font-semibold text-center text-gray-900 mb-2">
+        {{ nominee.name }}
+      </h3>
 
-                  <div class="mt-6">
-                    <button (click)="vote(nominee.NomineeID)"
-                            [disabled]="hasVoted || !isLoggedIn"
-                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed">
-                      {{ hasVoted ? 'Voted' : (isLoggedIn ? 'Vote Now' : 'Log In to Vote') }}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            }
-          </div>
+      <!-- Vote Button -->
+      <button (click)="vote(nominee.id)"
+              [disabled]="hasVoted || !isLoggedIn || availableVotes === 0"
+              class="w-full mt-4 py-3 px-4 rounded-lg font-medium transition
+                     disabled:opacity-50 disabled:cursor-not-allowed
+                     bg-green-600 text-white hover:bg-green-700
+                     flex items-center justify-center">
+        <span *ngIf="hasVoted">Voted</span>
+        <span *ngIf="!hasVoted && isLoggedIn">Vote Now</span>
+        <span *ngIf="!isLoggedIn">Login to Vote</span>
+      </button>
+    </div>
+
+    <!-- Vote Count (Admin only) -->
+    <div *ngIf="isAdmin" class="bg-gray-50 px-4 py-2 text-center text-sm text-gray-500">
+      {{ nominee.voteCount || 0 }} votes
+    </div>
+  </div>
+  }
+</div>
         }
 
         @if (!loading && nominees.length === 0) {

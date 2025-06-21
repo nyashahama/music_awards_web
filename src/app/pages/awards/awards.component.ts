@@ -3,6 +3,7 @@ import { HeaderComponent } from '../header/header.component';
 import { NewsLetterComponent } from '../news-letter/news-letter.component';
 import { FooterComponent } from '../footer/footer.component';
 import { AwardsService } from '../../cores/services/awards.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-awards',
@@ -16,7 +17,7 @@ export class AwardsComponent implements OnInit {
   categories: any[] = [];
   errorMessage: string = '';
 
-  constructor(private awardsService: AwardsService) { }
+  constructor(private awardsService: AwardsService,private router: Router) { }
 
   ngOnInit(): void {
   this.awardsService.listCategories().subscribe({
@@ -28,5 +29,7 @@ export class AwardsComponent implements OnInit {
       this.errorMessage = 'Failed to load categories';
       console.log(err);
     },
-  });
-}}
+  })
+}
+
+}

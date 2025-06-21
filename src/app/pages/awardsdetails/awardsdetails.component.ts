@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NewsLetterComponent } from '../news-letter/news-letter.component';
 import { FooterComponent } from '../footer/footer.component';
 import { HeaderComponent } from '../header/header.component';
@@ -9,6 +9,7 @@ import { AwardsService } from '../../cores/services/awards.service';
 import { NomineeService } from '../../cores/services/nominee.service';
 import { VoteService } from '../../cores/services/vote.service';
 import { AuthService } from '../../cores/services/auth.service';
+import { CategoryService } from '../../cores/services/category.service';
 
 @Component({
   selector: 'app-awardsdetails',
@@ -23,32 +24,68 @@ import { AuthService } from '../../cores/services/auth.service';
   styleUrl: './awardsdetails.component.css',
 })
 export class AwardsdetailsComponent {
- categoryId: string = '';
+
+categoryId: string = '';
   category: any = null;
   nominees: any[] = [];
   loading = true;
   errorMessage: string = '';
   hasVoted = false;
   isLoggedIn = false;
+  isAdmin = false; // Add admin flag
+  availableVotes: number = 0; // Initialize available votes
+  completedCategories: number = 0; // Initialize completed categories
+  totalCategories: number = 0; // Initialize total categories
 
   constructor(
     private route: ActivatedRoute,
     private awardsService: AwardsService,
     private nomineeService: NomineeService,
     private voteService: VoteService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router,
+    private categoryService: CategoryService // Inject CategoryService
   ) {}
 
   ngOnInit(): void {
     this.categoryId = this.route.snapshot.paramMap.get('id') || '';
     this.isLoggedIn = this.authService.isLoggedIn();
+    this.isAdmin = this.authService.getCurrentUser() === 'admin'; // Simple admin check
 
     this.loadCategory();
     this.loadNominees();
+    this.loadCategoriesCount(); // Load total categories
 
     if (this.isLoggedIn) {
       this.checkVoteStatus();
+      this.loadAvailableVotes();
     }
+  }
+
+  // Add this new method
+  private loadCategoriesCount(): void {
+    this.categoryService.listActiveCategories().subscribe({
+      next: (categories) => {
+        this.totalCategories = categories.length;
+      },
+      error: (err) => {
+        console.error('Failed to load categories count', err);
+        this.totalCategories = 10; // Fallback value
+      }
+    })
+  }
+
+private loadAvailableVotes(): void {
+    this.voteService.getAvailableVotes().subscribe({
+      next: (response) => {
+        this.availableVotes = response.available_votes;
+        // Update completed categories (total - available)
+        this.completedCategories = this.totalCategories - this.availableVotes;
+      },
+      error: (err) => {
+        console.error('Error loading available votes', err);
+      }
+    });
   }
 
   loadCategory(): void {
@@ -88,9 +125,12 @@ loadNominees(): void {
     this.hasVoted = false; // Placeholder
   }
 
-  vote(nomineeId: string): void {
+
+vote(nomineeId: string): void {
     if (!this.isLoggedIn) {
-      this.errorMessage = 'Please log in to vote';
+      this.router.navigate(['/login'], {
+        queryParams: { returnUrl: this.router.url }
+      });
       return;
     }
 
@@ -99,15 +139,40 @@ loadNominees(): void {
       return;
     }
 
+    if (this.availableVotes <= 0) {
+      this.errorMessage = 'You have no votes remaining';
+      return;
+    }
+
     this.voteService.castVote(this.categoryId, nomineeId).subscribe({
       next: () => {
+        // Update UI immediately
         this.hasVoted = true;
+        this.availableVotes--;
+        this.completedCategories++;
+
         this.errorMessage = '';
-        // Show success message
+        alert('Vote submitted successfully!');
+
+        // Refresh from server to confirm
+        this.loadAvailableVotes();
+        this.checkVoteStatus();
       },
       error: (err) => {
         console.error(err);
-        this.errorMessage = 'Failed to submit vote';
+        this.errorMessage = err.error?.message || 'Failed to submit vote';
       }
     });
-  }}
+  }
+
+  private updateAvailableVotes(): void{
+    this.voteService.getAvailableVotes().subscribe({
+      next: (response) =>{
+        //todo:
+        console.log("Available votes:",response.available_votes)
+      }
+    })
+  }
+}
+
+
