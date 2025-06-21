@@ -15,6 +15,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { ArtistComponent } from './pages/artist/artist.component';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 import { AwardsdetailsComponent } from './pages/awardsdetails/awardsdetails.component';
+import { VoteConfirmationComponent } from './pages/vote-confirmation/vote-confirmation.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -35,6 +36,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'profile', component: UserProfileComponent },
+  { path: 'vote-confirmation', component: VoteConfirmationComponent },
   { path: '404', component: ErrorsComponent },
   { path: '**', redirectTo: '/404' },
 ];

@@ -1,63 +1,97 @@
-<!-- artist-details.component.html -->
 <div class="bg-white">
-  <app-header activeLink="artists"></app-header>
+      <app-header activeLink="awards"></app-header>
 
-  <div class="relative isolate px-6 pt-14 lg:px-8">
-    <div class="mx-auto max-w-7xl py-24 sm:py-32">
-      @if (loading) {
-      <div class="text-center">Loading artist details...</div>
-      } @if (error) {
-      <div class="text-center text-red-600">{{ error }}</div>
-      } @if (nominee && !loading) {
-      <div class="flex flex-col items-center">
-        <!-- Artist Image -->
-        <img
-          class="h-64 w-64 rounded-full object-cover shadow-xl"
-          [src]="nominee.image_url || '/assets/placeholder-artist.png'"
-          [alt]="nominee.name"
-          onerror="this.src='/assets/placeholder-artist.png'"
-        />
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <!-- Back button -->
+        <div class="mb-6">
+          <a routerLink="/awards" class="text-green-600 hover:text-green-800 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+            </svg>
+            Back to Categories
+          </a>
+        </div>
 
-        <!-- Artist Name -->
-        <h1 class="mt-8 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-          {{ nominee.name }}
-        </h1>
-
-        <!-- Artist Description -->
-        <div class="mt-8 max-w-2xl text-center">
-          <p class="text-lg leading-8 text-gray-600">
-            {{ nominee.description || "Zimdancehall artist" }}
+        <!-- Category Header -->
+        <div class="text-center mb-12">
+          <h1 class="text-3xl font-bold text-gray-900 sm:text-4xl">
+            {{ category()?.name ?? 'Loading...' }}
+          </h1>
+          <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+            {{ category()?.description ?? 'Category description' }}
           </p>
         </div>
 
-        <!-- Sample Works -->
-        <div class="mt-12 w-full max-w-4xl">
-          <h2 class="text-2xl font-bold text-gray-900 mb-6">Sample Works</h2>
-          <ul class="list-disc pl-5 space-y-2">
-            @for (work of nominee.sample_works; track work) {
-            <li class="text-lg leading-8 text-gray-600">{{ work }}</li>
-            }
-          </ul>
-        </div>
+        <!-- Error Message -->
+        @if (errorMessage) {
+          <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm text-red-700">
+                  {{ errorMessage }}
+                </p>
+              </div>
+            </div>
+          </div>
+        }
 
-        <!-- Nominated Categories -->
-        @if (nominee.categories && nominee.categories.length > 0) {
-        <div class="mt-8 w-full max-w-4xl">
-          <h2 class="text-2xl font-bold text-gray-900 mb-6">Nominated Categories</h2>
-          <div class="flex flex-wrap gap-2">
-            @for (category of nominee.categories; track category.category_id) {
-            <span class="inline-flex items-center rounded-full bg-green-50 px-3 py-1 text-sm font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-              {{ category.name }}
-            </span>
+        <!-- Nominees Grid -->
+        @if (loading) {
+          <div class="flex justify-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-600"></div>
+          </div>
+        } @else {
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            @for (nominee of nominees; track nominee.NomineeID) {
+              <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+                <div class="p-6">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <h3 class="text-lg font-semibold text-gray-900">{{ nominee.Name }}</h3>
+                      <p class="mt-1 text-gray-600 text-sm">Nominated Artist</p>
+                    </div>
+                    <div class="bg-gray-100 rounded-full p-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div class="mt-6 flex justify-center">
+                    <img [src]="nominee.ImageURL ?? 'assets/placeholder-artist.jpg'"
+                         alt="{{ nominee.Name }}"
+                         class="h-40 w-40 rounded-full object-cover border-4 border-green-100">
+                  </div>
+
+                  <div class="mt-6">
+                    <button (click)="vote(nominee.NomineeID)"
+                            [disabled]="hasVoted || !isLoggedIn"
+                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                      {{ hasVoted ? 'Voted' : (isLoggedIn ? 'Vote Now' : 'Log In to Vote') }}
+                    </button>
+                  </div>
+                </div>
+              </div>
             }
           </div>
-        </div>
+        }
+
+        @if (!loading && nominees.length === 0) {
+          <div class="text-center py-12">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h3 class="mt-4 text-lg font-medium text-gray-900">No nominees found</h3>
+            <p class="mt-1 text-gray-500">There are currently no nominees for this category.</p>
+          </div>
         }
       </div>
-      }
-    </div>
-  </div>
 
-  <app-news-letter></app-news-letter>
-  <app-footer></app-footer>
-</div>
+      <app-news-letter></app-news-letter>
+      <app-footer></app-footer>
+    </div>

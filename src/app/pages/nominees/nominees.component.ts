@@ -9,4 +9,6 @@ import { FooterComponent } from '../footer/footer.component';
   templateUrl: './nominees.component.html',
   styles: ``,
 })
-export class NomineesComponent {}
+export class NomineesComponent {
+
+}

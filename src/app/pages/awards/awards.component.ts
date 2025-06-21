@@ -19,15 +19,14 @@ export class AwardsComponent implements OnInit {
   constructor(private awardsService: AwardsService) { }
 
   ngOnInit(): void {
-    this.awardsService.listCategories().subscribe({
-      next: (data) => {
-        console.log(data);
-        this.categories = data;
-      },
-      error: (err) => {
-        this.errorMessage = 'Failed to load categories';
-        console.log(err);
-      },
-    });
-  }
-}
+  this.awardsService.listCategories().subscribe({
+    next: (data) => {
+      console.log(data);
+      this.categories = data;
+    },
+    error: (err) => {
+      this.errorMessage = 'Failed to load categories';
+      console.log(err);
+    },
+  });
+}}

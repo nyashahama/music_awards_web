@@ -11,16 +11,16 @@ export class AwardsService {
   constructor(private http: HttpClient) {}
 
   listCategories(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/categories`).pipe(
-      map((response: any) =>
-        response.map((category: any) => ({
-          name: category.Name || category.name,
-          description: category.Description || category.description,
-        }))
-      )
-    );
-  }
-
+  return this.http.get(`${this.apiUrl}/categories`).pipe(
+    map((response: any) =>
+      response.map((category: any) => ({
+        id: category.category_id || category.id, // Add ID mapping
+        name: category.Name || category.name,
+        description: category.Description || category.description,
+      }))
+    )
+  );
+}
   listActivecategories(active: boolean): Observable<any> {
     return this.http.get(`${this.apiUrl}/categories/${active}`);
   }
@@ -28,6 +28,16 @@ export class AwardsService {
   getCategories(id: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/categories/${id}`);
   }
+
+  getCategory(id: string): Observable<any> {
+  return this.http.get(`${this.apiUrl}/categories/${id}`).pipe(
+    map((category: any) => ({
+      id: category.CategoryID || category.id,
+      name: category.Name || category.name,
+      description: category.Description || category.description
+    }))
+  );
+}
 
   createCategory(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/categories`, data);
