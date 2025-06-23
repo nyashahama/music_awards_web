@@ -16,6 +16,7 @@ import { ArtistComponent } from './pages/artist/artist.component';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 import { AwardsdetailsComponent } from './pages/awardsdetails/awardsdetails.component';
 import { VoteConfirmationComponent } from './pages/vote-confirmation/vote-confirmation.component';
+import { ArtistDetailsComponent } from './pages/artist-details/artist-details.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -27,6 +28,7 @@ export const routes: Routes = [
   },
   { path: 'awards', component: AwardsComponent },
   { path: 'awards/:id', component: AwardsdetailsComponent},
+  {path: "artist/:id", component: ArtistDetailsComponent},
   { path: 'contact', component: ContactComponent },
   { path: 'nominees', component: NomineesComponent },
   { path: 'pricing', component: PricingComponent },

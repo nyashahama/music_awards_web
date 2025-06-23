@@ -82,6 +82,8 @@
         {{ nominee.name }}
       </h3>
 
+
+
       <!-- Vote Button -->
       <button (click)="vote(nominee.id)"
               [disabled]="hasVoted || !isLoggedIn || availableVotes === 0"

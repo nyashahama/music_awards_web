@@ -105,6 +105,16 @@
           <p class="mt-2 text-base leading-7 text-gray-600">
             {{ category.description }}
           </p>
+<!-- VIEW MORE BUTTON ADDED HERE -->
+          <div class="mt-auto w-full pt-4">
+            <a [routerLink]="['/awards', category.id]"
+               class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-green-700 bg-green-50 rounded-md hover:bg-green-100 hover:text-green-800 transition-colors">
+              View Nominees
+              <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </a>
+          </div>
         </div>
         }
       </div>

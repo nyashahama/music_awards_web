@@ -1,0 +1,107 @@
+<div class="bg-white">
+  <app-header activeLink="artists"></app-header>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <!-- Back button -->
+    <div class="mb-6">
+      <a routerLink="/artists" class="text-green-600 hover:text-green-800 flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+        </svg>
+        Back to Artists
+      </a>
+    </div>
+
+    @if (loading) {
+      <div class="flex justify-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-600"></div>
+      </div>
+    }
+
+    @if (errorMessage) {
+      <div class="text-center text-red-600 p-4 bg-red-50 rounded-lg border border-red-200 mb-8">
+        {{ errorMessage }}
+      </div>
+    }
+
+    @if (artist && !loading) {
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="md:flex">
+          <!-- Artist Image -->
+          <div class="md:flex-shrink-0 flex justify-center p-8">
+            <img [src]="artist.imageUrl || 'assets/placeholder-artist.jpg'"
+                 alt="{{ artist.name }}"
+                 class="h-64 w-64 rounded-full object-cover border-4 border-green-100">
+          </div>
+
+          <!-- Artist Details -->
+          <div class="p-8 flex-1">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ artist.name }}</h1>
+
+            @if (artist.description) {
+              <p class="mt-4 text-lg text-gray-600">{{ artist.description }}</p>
+            }
+
+            <!-- Additional artist information -->
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+              @if (artist.genre) {
+                <div>
+                  <h3 class="text-sm font-medium text-gray-500">Genre</h3>
+                  <p class="text-lg text-gray-900">{{ artist.genre }}</p>
+                </div>
+              }
+
+              @if (artist.yearsActive) {
+                <div>
+                  <h3 class="text-sm font-medium text-gray-500">Years Active</h3>
+                  <p class="text-lg text-gray-900">{{ artist.yearsActive }}</p>
+                </div>
+              }
+
+              @if (artist.hometown) {
+                <div>
+                  <h3 class="text-sm font-medium text-gray-500">Hometown</h3>
+                  <p class="text-lg text-gray-900">{{ artist.hometown }}</p>
+                </div>
+              }
+
+              @if (artist.website) {
+                <div>
+                  <h3 class="text-sm font-medium text-gray-500">Website</h3>
+                  <a [href]="artist.website" target="_blank" class="text-lg text-green-600 hover:underline">
+                    {{ artist.website }}
+                  </a>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Nominations Section -->
+        @if (artist.nominations && artist.nominations.length > 0) {
+          <div class="border-t border-gray-200 mt-8 pt-8 px-8 pb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Award Nominations</h2>
+
+            <div class="grid grid-cols-1 gap-4">
+              @for (nomination of artist.nominations; track nomination.id) {
+                <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                  <div class="flex-1">
+                    <h3 class="text-lg font-medium text-gray-900">{{ nomination.category }}</h3>
+                    <p class="text-gray-600">Nominated for "{{ nomination.song }}"</p>
+                  </div>
+                  <a [routerLink]="['/awards', nomination.categoryId]"
+                     class="text-green-600 hover:text-green-800 font-medium">
+                    View Category
+                  </a>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <app-news-letter></app-news-letter>
+  <app-footer></app-footer>
+</div>

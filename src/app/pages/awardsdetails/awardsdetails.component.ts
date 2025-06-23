@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { NewsLetterComponent } from '../news-letter/news-letter.component';
 import { FooterComponent } from '../footer/footer.component';
 import { HeaderComponent } from '../header/header.component';
@@ -19,6 +19,7 @@ import { CategoryService } from '../../cores/services/category.service';
     NewsLetterComponent,
     FooterComponent,
     HeaderComponent,
+    RouterModule
   ],
   templateUrl: './awardsdetails.component.html',
   styleUrl: './awardsdetails.component.css',
@@ -117,6 +118,7 @@ export class AwardsdetailsComponent {
       },
     });
   }
+
   checkVoteStatus(): void {
     // Implement logic to check if user has voted in this category
     // This would typically call a backend endpoint

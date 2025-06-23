@@ -16,7 +16,7 @@ export class NomineeService {
   //
   getNomineesByCategory(categoryId: string): Observable<any> {
     return this.http
-      .get(`${this.apiUrl}/categories/${categoryId}/nominees`)
+      .get(`${this.apiUrl}/categories/${categoryId}`)
       .pipe(
         map((response: any) =>
           response.map((nominee: any) => ({
@@ -26,5 +26,11 @@ export class NomineeService {
           })),
         ),
       );
+  }
+
+
+  // Fetch nominee details by ID
+  getNomineeDetails(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/nominees/${id}`);
   }
 }
