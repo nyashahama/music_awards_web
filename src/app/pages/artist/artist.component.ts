@@ -10,7 +10,14 @@ import { FooterComponent } from '../footer/footer.component';
 @Component({
   selector: 'app-artist',
   standalone: true,
-  imports: [CommonModule, RouterModule, HeaderComponent, NewsLetterComponent, FooterComponent, RouterLink],
+  imports: [
+    CommonModule,
+    RouterModule,
+    HeaderComponent,
+    NewsLetterComponent,
+    FooterComponent,
+    RouterLink,
+  ],
   templateUrl: './artist.component.html',
 })
 export class ArtistComponent implements OnInit, OnDestroy {
@@ -19,7 +26,7 @@ export class ArtistComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   private subscription: Subscription = new Subscription();
 
-  constructor(private artistService: ArtistService) { }
+  constructor(private artistService: ArtistService) {}
 
   ngOnInit(): void {
     this.loadNominees();
@@ -43,7 +50,7 @@ export class ArtistComponent implements OnInit, OnDestroy {
         console.error('Error loading nominees:', error);
         this.errorMessage = 'Failed to load artists. Please try again later.';
         this.loading = false;
-      }
+      },
     });
 
     this.subscription.add(sub);

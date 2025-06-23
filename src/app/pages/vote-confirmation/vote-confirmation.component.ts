@@ -5,20 +5,18 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'app-vote-confirmation',
   imports: [],
   templateUrl: './vote-confirmation.component.html',
-  styles: ``
+  styles: ``,
 })
 export class VoteConfirmationComponent {
-
   categoryName: string = '';
   nomineeName: string = '';
   nomineeImage: string = '';
 
   constructor(private route: ActivatedRoute) {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.categoryName = params['category'] || 'this category';
       this.nomineeName = params['nominee'] || 'your artist';
       this.nomineeImage = params['image'] || 'assets/placeholder-artist.jpg';
     });
   }
-
 }

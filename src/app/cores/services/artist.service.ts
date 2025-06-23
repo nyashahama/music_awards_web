@@ -10,14 +10,12 @@ export interface Nominee {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ArtistService {
+  private apiUrl = 'https://music-awards-server.onrender.com/api';
 
-  private apiUrl = "https://music-awards-server.onrender.com/api";
-
-  constructor(private http: HttpClient) { }
-
+  constructor(private http: HttpClient) {}
 
   listNominees(): Observable<any> {
     return this.http.get(`${this.apiUrl}/nominees`).pipe(
@@ -26,9 +24,9 @@ export class ArtistService {
           id: nominee.nominee_id,
           name: nominee.name,
           description: nominee.description,
-          imageUrl: nominee.image_url
-        }))
-      )
+          imageUrl: nominee.image_url,
+        })),
+      ),
     );
   }
 

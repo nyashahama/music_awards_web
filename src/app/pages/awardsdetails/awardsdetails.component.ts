@@ -18,14 +18,13 @@ import { CategoryService } from '../../cores/services/category.service';
     CommonModule,
     NewsLetterComponent,
     FooterComponent,
-    HeaderComponent
+    HeaderComponent,
   ],
   templateUrl: './awardsdetails.component.html',
   styleUrl: './awardsdetails.component.css',
 })
 export class AwardsdetailsComponent {
-
-categoryId: string = '';
+  categoryId: string = '';
   category: any = null;
   nominees: any[] = [];
   loading = true;
@@ -44,13 +43,13 @@ categoryId: string = '';
     private voteService: VoteService,
     private authService: AuthService,
     private router: Router,
-    private categoryService: CategoryService // Inject CategoryService
+    private categoryService: CategoryService, // Inject CategoryService
   ) {}
 
   ngOnInit(): void {
     this.categoryId = this.route.snapshot.paramMap.get('id') || '';
     this.isLoggedIn = this.authService.isLoggedIn();
-    this.isAdmin = this.authService.getCurrentUser() === 'admin'; // Simple admin check
+    this.isAdmin = this.authService.getCurrentUser() === 'admin';
 
     this.loadCategory();
     this.loadNominees();
@@ -62,7 +61,6 @@ categoryId: string = '';
     }
   }
 
-  // Add this new method
   private loadCategoriesCount(): void {
     this.categoryService.listActiveCategories().subscribe({
       next: (categories) => {
@@ -71,11 +69,11 @@ categoryId: string = '';
       error: (err) => {
         console.error('Failed to load categories count', err);
         this.totalCategories = 10; // Fallback value
-      }
-    })
+      },
+    });
   }
 
-private loadAvailableVotes(): void {
+  private loadAvailableVotes(): void {
     this.voteService.getAvailableVotes().subscribe({
       next: (response) => {
         this.availableVotes = response.available_votes;
@@ -84,52 +82,51 @@ private loadAvailableVotes(): void {
       },
       error: (err) => {
         console.error('Error loading available votes', err);
-      }
+      },
     });
   }
 
   loadCategory(): void {
-  // Use getCategory instead of getCategories
-  this.awardsService.getCategory(this.categoryId).subscribe({
-    next: (data) => {
-      this.category = data;
-    },
-    error: (err) => {
-      console.error(err);
-      this.errorMessage = 'Failed to load category details';
-    }
-  });
-}
+    // Use getCategory instead of getCategories
+    this.awardsService.getCategory(this.categoryId).subscribe({
+      next: (data) => {
+        this.category = data;
+      },
+      error: (err) => {
+        console.error(err);
+        this.errorMessage = 'Failed to load category details';
+      },
+    });
+  }
 
-loadNominees(): void {
-  this.nomineeService.getNomineesByCategory(this.categoryId).subscribe({
-    next: (data) => {
-      // Map response to consistent structure
-      this.nominees = data.map((nominee: any) => ({
-        id: nominee.nominee_id,
-        name: nominee.name,
-        imageUrl: nominee.image_url
-      }));
-      this.loading = false;
-    },
-    error: (err) => {
-      console.error(err);
-      this.errorMessage = 'Failed to load nominees';
-      this.loading = false;
-    }
-  });
-}
+  loadNominees(): void {
+    this.nomineeService.getNomineesByCategory(this.categoryId).subscribe({
+      next: (data) => {
+        // Map response to consistent structure
+        this.nominees = data.map((nominee: any) => ({
+          id: nominee.nominee_id,
+          name: nominee.name,
+          imageUrl: nominee.image_url,
+        }));
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.errorMessage = 'Failed to load nominees';
+        this.loading = false;
+      },
+    });
+  }
   checkVoteStatus(): void {
     // Implement logic to check if user has voted in this category
     // This would typically call a backend endpoint
     this.hasVoted = false; // Placeholder
   }
 
-
-vote(nomineeId: string): void {
+  vote(nomineeId: string): void {
     if (!this.isLoggedIn) {
       this.router.navigate(['/login'], {
-        queryParams: { returnUrl: this.router.url }
+        queryParams: { returnUrl: this.router.url },
       });
       return;
     }
@@ -161,18 +158,16 @@ vote(nomineeId: string): void {
       error: (err) => {
         console.error(err);
         this.errorMessage = err.error?.message || 'Failed to submit vote';
-      }
+      },
     });
   }
 
-  private updateAvailableVotes(): void{
+  private updateAvailableVotes(): void {
     this.voteService.getAvailableVotes().subscribe({
-      next: (response) =>{
+      next: (response) => {
         //todo:
-        console.log("Available votes:",response.available_votes)
-      }
-    })
+        console.log('Available votes:', response.available_votes);
+      },
+    });
   }
 }
-
-
