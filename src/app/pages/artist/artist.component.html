@@ -47,11 +47,11 @@
         @for (nominee of nominees; track nominee.id) {
         <article
           class="flex flex-col items-center rounded-xl bg-white p-6 shadow-lg ring-1 ring-gray-200 hover:shadow-xl transition-shadow duration-300">
-          <!-- <div class="relative"> -->
-          <!--   <img class="h-48 w-48 rounded-full object-cover ring-4 ring-white shadow-lg" -->
-          <!--     [src]="getSafeImageUrl(nominee.imageUrl)" [alt]="nominee.name" (error)="onImageError($event)" -->
-          <!--     loading="lazy" /> -->
-          <!-- </div> -->
+          <div class="relative">
+            <img class="h-48 w-48 rounded-full object-cover ring-4 ring-white shadow-lg"
+              [src]="getSafeImageUrl(nominee.imageUrl)" [alt]="nominee.name" (error)="onImageError($event)"
+              loading="lazy" />
+          </div>
           <h3 class="mt-6 text-lg font-semibold leading-8 tracking-tight text-gray-900 text-center">
             {{ nominee.name }}
           </h3>

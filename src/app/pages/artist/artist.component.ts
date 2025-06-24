@@ -6,6 +6,7 @@ import { ArtistService, Nominee } from '../../cores/services/artist.service';
 import { HeaderComponent } from '../header/header.component';
 import { NewsLetterComponent } from '../news-letter/news-letter.component';
 import { FooterComponent } from '../footer/footer.component';
+import { NomineeService } from '../../cores/services/nominee.service';
 
 @Component({
   selector: 'app-artist',
@@ -26,7 +27,7 @@ export class ArtistComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   private subscription: Subscription = new Subscription();
 
-  constructor(private artistService: ArtistService) {}
+  constructor(private nomineeService: NomineeService) {}
 
   ngOnInit(): void {
     this.loadNominees();
@@ -40,7 +41,7 @@ export class ArtistComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.errorMessage = '';
 
-    const sub = this.artistService.listNominees().subscribe({
+    const sub = this.nomineeService.getAllNominees().subscribe({
       next: (data: Nominee[]) => {
         this.nominees = data;
         this.loading = false;

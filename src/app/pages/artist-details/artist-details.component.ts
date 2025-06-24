@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { ArtistService } from '../../cores/services/artist.service';
+import { NomineeService} from '../../cores/services/nominee.service';
 import { HeaderComponent } from '../header/header.component';
 import { NewsLetterComponent } from '../news-letter/news-letter.component';
 import { FooterComponent } from '../footer/footer.component';
@@ -18,7 +18,7 @@ export class ArtistDetailsComponent {
   loading = true;
   errorMessage: string = "";
 
-  constructor(private route: ActivatedRoute, private artistService: ArtistService){
+  constructor(private route: ActivatedRoute, private nomineeService:NomineeService){
 
   }
 
@@ -28,7 +28,7 @@ export class ArtistDetailsComponent {
   }
 
   loadArtist(): void{
-    this.artistService.getNomineeDetails(this.artistId).subscribe({
+    this.nomineeService.getNomineeDetails(this.artistId).subscribe({
       next: (data) => {
         this.artist = data;
         this.loading = false;
