@@ -26,6 +26,4 @@ export class VoteService {
       `${this.apiUrl}/votes/available`,
     );
   }
-
-
 }

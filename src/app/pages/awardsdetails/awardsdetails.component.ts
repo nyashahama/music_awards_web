@@ -19,7 +19,7 @@ import { CategoryService } from '../../cores/services/category.service';
     NewsLetterComponent,
     FooterComponent,
     HeaderComponent,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './awardsdetails.component.html',
   styleUrl: './awardsdetails.component.css',
@@ -100,24 +100,24 @@ export class AwardsdetailsComponent {
     });
   }
 
-loadNominees(): void {
-  this.nomineeService.getNomineesByCategory(this.categoryId).subscribe({
-    next: (data) => {
+  loadNominees(): void {
+    this.nomineeService.getNomineesByCategory(this.categoryId).subscribe({
+      next: (data) => {
         this.nominees = data.map((nominee: any) => ({
-        id: nominee.id,
-        name: nominee.name,
-        imageUrl: nominee.image_url,
-      }));
-      console.log('Nominees loaded:', this.nominees); // Add this for debugging
-      this.loading = false;
-    },
-    error: (err) => {
-      console.error(err);
-      this.errorMessage = 'Failed to load nominees';
-      this.loading = false;
-    },
-  });
-}
+          id: nominee.id,
+          name: nominee.name,
+          imageUrl: nominee.image_url,
+        }));
+        console.log('Nominees loaded:', this.nominees); // Add this for debugging
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.errorMessage = 'Failed to load nominees';
+        this.loading = false;
+      },
+    });
+  }
   checkVoteStatus(): void {
     // Implement logic to check if user has voted in this category
     // This would typically call a backend endpoint
@@ -125,62 +125,62 @@ loadNominees(): void {
   }
 
   vote(nomineeId: string): void {
-  if (!this.isLoggedIn) {
-    this.router.navigate(['/login'], {
-      queryParams: { returnUrl: this.router.url },
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/login'], {
+        queryParams: { returnUrl: this.router.url },
+      });
+      return;
+    }
+
+    if (this.hasVoted) {
+      this.errorMessage = 'You have already voted in this category';
+      return;
+    }
+
+    if (this.availableVotes <= 0) {
+      this.errorMessage = 'You have no votes remaining';
+      return;
+    }
+
+    // Validate UUID format
+    if (!this.isValidUuid(this.categoryId)) {
+      this.errorMessage = 'Invalid category ID format';
+      return;
+    }
+
+    if (!this.isValidUuid(nomineeId)) {
+      this.errorMessage = 'Invalid nominee ID format';
+      return;
+    }
+
+    this.voteService.castVote(this.categoryId, nomineeId).subscribe({
+      next: () => {
+        this.hasVoted = true;
+        this.availableVotes--;
+        this.completedCategories++;
+        this.errorMessage = '';
+        alert('Vote submitted successfully!');
+        this.loadAvailableVotes();
+        this.checkVoteStatus();
+      },
+      error: (err) => {
+        console.error('Vote error:', err);
+        if (err.error?.error) {
+          this.errorMessage = err.error.error;
+        } else if (err.status === 400) {
+          this.errorMessage = 'Invalid request. Please check your vote.';
+        } else {
+          this.errorMessage = err.message || 'Failed to submit vote';
+        }
+      },
     });
-    return;
   }
 
-  if (this.hasVoted) {
-    this.errorMessage = 'You have already voted in this category';
-    return;
+  private isValidUuid(id: string): boolean {
+    const uuidPattern =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return uuidPattern.test(id);
   }
-
-  if (this.availableVotes <= 0) {
-    this.errorMessage = 'You have no votes remaining';
-    return;
-  }
-
-  // Validate UUID format
-  if (!this.isValidUuid(this.categoryId)) {
-    this.errorMessage = 'Invalid category ID format';
-    return;
-  }
-
-
-  if (!this.isValidUuid(nomineeId)) {
-    this.errorMessage = 'Invalid nominee ID format';
-    return;
-  }
-
-  this.voteService.castVote(this.categoryId, nomineeId).subscribe({
-    next: () => {
-      this.hasVoted = true;
-      this.availableVotes--;
-      this.completedCategories++;
-      this.errorMessage = '';
-      alert('Vote submitted successfully!');
-      this.loadAvailableVotes();
-      this.checkVoteStatus();
-    },
-    error: (err) => {
-      console.error('Vote error:', err);
-      if (err.error?.error) {
-        this.errorMessage = err.error.error;
-      } else if (err.status === 400) {
-        this.errorMessage = 'Invalid request. Please check your vote.';
-      } else {
-        this.errorMessage = err.message || 'Failed to submit vote';
-      }
-    },
-  });
-}
-
-private isValidUuid(id: string): boolean {
-  const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-  return uuidPattern.test(id);
-}
 
   private updateAvailableVotes(): void {
     this.voteService.getAvailableVotes().subscribe({
