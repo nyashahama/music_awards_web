@@ -22,6 +22,8 @@ import { NomineeService } from '../../cores/services/nominee.service';
   templateUrl: './artist.component.html',
 })
 export class ArtistComponent implements OnInit, OnDestroy {
+
+  //to check if we still up
   nominees: Nominee[] = [];
   errorMessage: string = '';
   loading: boolean = true;
