@@ -1,6 +1,10 @@
-
 {
-  "routes": {
-    "/**": "index.html"
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build --configuration=production",
+    "build:render": "ng build --configuration=production --base-href=/",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
   }
 }
