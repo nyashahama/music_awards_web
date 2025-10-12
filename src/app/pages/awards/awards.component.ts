@@ -13,23 +13,25 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class AwardsComponent implements OnInit {
   @Input() activeLink: string = '';
-
   categories: any[] = [];
   errorMessage: string = '';
+  loading: boolean = false;
 
-  constructor(private awardsService: AwardsService,private router: Router) { }
+  constructor(private awardsService: AwardsService, private router: Router) { }
 
   ngOnInit(): void {
-  this.awardsService.listCategories().subscribe({
-    next: (data) => {
-      console.log(data);
-      this.categories = data;
-    },
-    error: (err) => {
-      this.errorMessage = 'Failed to load categories';
-      console.log(err);
-    },
-  })
-}
-
+    this.loading = true;
+    this.awardsService.listCategories().subscribe({
+      next: (data) => {
+        console.log(data);
+        this.categories = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        this.errorMessage = 'Failed to load categories';
+        this.loading = false;
+        console.log(err);
+      },
+    });
+  }
 }

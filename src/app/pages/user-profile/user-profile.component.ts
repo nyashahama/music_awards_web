@@ -1,3 +1,4 @@
+// user-profile.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -8,6 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthService } from '../../cores/services/auth.service';
+import { VoteService, Vote } from '../../cores/services/vote.service'; // Add this import
 import { Router } from '@angular/router';
 
 interface UserProfile {
@@ -24,6 +26,7 @@ interface UserProfile {
 }
 
 interface VotingRecord {
+  id: string;
   awardName: string;
   category: string;
   nominee: string;
@@ -55,19 +58,28 @@ export class UserProfileComponent implements OnInit {
     bio: '',
   };
 
+  // Add voting history array
+  votingHistory: VotingRecord[] = [];
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private voteService: VoteService, // Inject the vote service
     private router: Router
   ) {
     this.profileForm = this.fb.group({
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       username: ['', [Validators.required, Validators.minLength(3)]],
+      bio: [''],
+      timezone: ['America/New_York']
     });
   }
 
   ngOnInit(): void {
     this.loadUserProfile();
+    this.loadVotingHistory(); // Load voting history when component initializes
   }
 
   loadUserProfile(): void {
@@ -95,6 +107,31 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
+  // Add method to load voting history
+  loadVotingHistory(): void {
+    this.voteService.getUserVotes().subscribe({
+      next: (votes: Vote[]) => {
+        console.log('Received votes:', votes);
+        // Transform the API response to match your VotingRecord interface
+        this.votingHistory = votes.map(vote => ({
+          id: vote.id,
+          awardName: 'Zimdancehall Awards', // You might need to adjust this based on your data
+          category: vote.category_name || 'Unknown Category',
+          nominee: vote.nominee_name || 'Unknown Nominee',
+          year: new Date(vote.created_at).getFullYear(),
+          date: new Date(vote.created_at)
+        }));
+
+        // Also update the user object for the template
+        this.user.votingHistory = this.votingHistory;
+      },
+      error: (err) => {
+        console.error('Failed to load voting history:', err);
+        this.errorMessage = 'Failed to load voting history';
+      }
+    });
+  }
+
   updateProfile(): void {
     console.log('Submitting:', this.profileForm.value);
     console.log('User ID:', this.userId);
@@ -103,8 +140,12 @@ export class UserProfileComponent implements OnInit {
       this.errorMessage = '';
 
       const updatedData = {
+        firstName: this.profileForm.value.firstName,
+        lastName: this.profileForm.value.lastName,
         username: this.profileForm.value.username,
         email: this.profileForm.value.email,
+        bio: this.profileForm.value.bio,
+        timezone: this.profileForm.value.timezone,
       };
 
       this.authService.updateUserProfile(this.userId, updatedData).subscribe({
@@ -125,8 +166,9 @@ export class UserProfileComponent implements OnInit {
       this.profileForm.markAllAsTouched();
     }
   }
+
   deleteAccount(): void {
-    if (confirm('Delete confirmation...') && this.userId) {
+    if (confirm('Are you sure you want to delete your account? This action cannot be undone.') && this.userId) {
       this.authService.deleteUserProfile(this.userId).subscribe({
         next: () => {
           this.authService.logout();
@@ -139,6 +181,7 @@ export class UserProfileComponent implements OnInit {
       });
     }
   }
+
   triggerFileInput(): void {
     const fileInput = document.querySelector(
       'input[type="file"]'
