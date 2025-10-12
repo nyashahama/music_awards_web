@@ -3,12 +3,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+// Update the Vote interface to match the actual API response
 export interface Vote {
-  id: string;
-  category_id: string;
-  category_name: string;
-  nominee_id: string;
-  nominee_name: string;
+  vote_id: string;
+  category: {
+    id: string;
+    name: string;
+  };
+  nominee: {
+    id: string;
+    name: string;
+  };
   created_at: string;
 }
 
@@ -29,11 +34,16 @@ export class VoteService {
   }
 
   castVote(nomineeId: string, categoryId: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/votes`, { nominee_id: nomineeId, category_id: categoryId });
+    return this.http.post(`${this.apiUrl}/votes`, {
+      nominee_id: nomineeId,
+      category_id: categoryId
+    });
   }
 
   changeVote(voteId: string, nomineeId: string): Observable<any> {
-    return this.http.put(`${this.apiUrl}/votes/${voteId}`, { nominee_id: nomineeId });
+    return this.http.put(`${this.apiUrl}/votes/${voteId}`, {
+      nominee_id: nomineeId
+    });
   }
 
   deleteVote(voteId: string): Observable<any> {

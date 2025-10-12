@@ -1,5 +1,6 @@
 // user-profile.component.ts
 import { Component, OnInit } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -108,29 +109,26 @@ export class UserProfileComponent implements OnInit {
   }
 
   // Add method to load voting history
-  loadVotingHistory(): void {
-    this.voteService.getUserVotes().subscribe({
-      next: (votes: Vote[]) => {
-        console.log('Received votes:', votes);
-        // Transform the API response to match your VotingRecord interface
-        this.votingHistory = votes.map(vote => ({
-          id: vote.id,
-          awardName: 'Zimdancehall Awards', // You might need to adjust this based on your data
-          category: vote.category_name || 'Unknown Category',
-          nominee: vote.nominee_name || 'Unknown Nominee',
-          year: new Date(vote.created_at).getFullYear(),
-          date: new Date(vote.created_at)
-        }));
-
-        // Also update the user object for the template
-        this.user.votingHistory = this.votingHistory;
-      },
-      error: (err) => {
-        console.error('Failed to load voting history:', err);
-        this.errorMessage = 'Failed to load voting history';
-      }
-    });
-  }
+loadVotingHistory(): void {
+  this.voteService.getUserVotes().subscribe({
+    next: (votes: Vote[]) => {
+      console.log('Received votes:', votes);
+      this.votingHistory = votes.map(vote => ({
+        id: vote.vote_id,
+        awardName: 'Zimdancehall Awards',
+        category: vote.category.name,
+        nominee: vote.nominee.name,
+        year: new Date(vote.created_at).getFullYear(),
+        date: new Date(vote.created_at)
+      }));
+      this.user.votingHistory = this.votingHistory;
+    },
+    error: (err) => {
+      console.error('Failed to load voting history:', err);
+      this.errorMessage = 'Failed to load voting history';
+    }
+  });
+}
 
   updateProfile(): void {
     console.log('Submitting:', this.profileForm.value);
