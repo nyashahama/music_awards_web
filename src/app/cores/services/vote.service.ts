@@ -33,12 +33,12 @@ export class VoteService {
     return this.http.get<{ available_votes: number }>(`${this.apiUrl}/votes/available`);
   }
 
-  castVote(nomineeId: string, categoryId: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/votes`, {
-      nominee_id: nomineeId,
-      category_id: categoryId
-    });
-  }
+  castVote(categoryId: string, nomineeId: string): Observable<any> {
+  return this.http.post(`${this.apiUrl}/votes`, {
+    category_id: categoryId,
+    nominee_id: nomineeId
+  });
+}
 
   changeVote(voteId: string, nomineeId: string): Observable<any> {
     return this.http.put(`${this.apiUrl}/votes/${voteId}`, {
