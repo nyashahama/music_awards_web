@@ -107,6 +107,10 @@ export class AwardsdetailsComponent {
   }
 
   loadNominees(): void {
+    if(!this.isLoggedIn){
+      this.errorMessage = "Please login vote"
+      return;
+    }
     this.nomineeService.getNomineesByCategory(this.categoryId).subscribe({
       next: (data) => {
         this.nominees = data.map((nominee: any) => ({
