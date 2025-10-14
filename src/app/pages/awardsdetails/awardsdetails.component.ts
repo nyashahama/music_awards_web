@@ -21,7 +21,7 @@ import { VoteConfirmationModalComponent } from '../vote-confirmation-modal/vote-
     FooterComponent,
     HeaderComponent,
     RouterModule,
-    VoteConfirmationModalComponent, // Add this
+    VoteConfirmationModalComponent,
   ],
   templateUrl: './awardsdetails.component.html',
   styleUrl: './awardsdetails.component.css',
@@ -42,6 +42,8 @@ export class AwardsdetailsComponent {
   // Add modal state properties
   showConfirmationModal = false;
   selectedNominee: any = null;
+  modalSuccess: boolean = true;
+  modalErrorMessage: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -160,7 +162,9 @@ export class AwardsdetailsComponent {
         this.completedCategories++;
         this.errorMessage = '';
 
-        // Show confirmation modal instead of alert
+        // Show success modal
+        this.modalSuccess = true;
+        this.modalErrorMessage = '';
         this.showConfirmationModal = true;
 
         this.loadAvailableVotes();
@@ -168,15 +172,25 @@ export class AwardsdetailsComponent {
       },
       error: (err) => {
         console.error('Vote error details:', err);
+
+        // Set error message based on error type
         if (err.error?.error) {
-          this.errorMessage = err.error.error;
+          this.modalErrorMessage = err.error.error;
         } else if (err.status === 400) {
-          this.errorMessage = 'Invalid request. Please check your vote.';
+          this.modalErrorMessage = 'Invalid request. Please check your vote.';
+        } else if (err.status === 409) {
+          this.modalErrorMessage = 'You have already voted in this category.';
+        } else if (err.status === 403) {
+          this.modalErrorMessage = 'Voting period is closed for this category.';
         } else if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again later.';
+          this.modalErrorMessage = 'Server error. Please try again later.';
         } else {
-          this.errorMessage = err.message || 'Failed to submit vote';
+          this.modalErrorMessage = err.message || 'Failed to submit vote';
         }
+
+        // Show error modal
+        this.modalSuccess = false;
+        this.showConfirmationModal = true;
       },
     });
   }
@@ -184,11 +198,26 @@ export class AwardsdetailsComponent {
   // Modal handlers
   onCloseModal(): void {
     this.showConfirmationModal = false;
+    this.modalErrorMessage = '';
   }
 
   onContinueVoting(): void {
     this.showConfirmationModal = false;
+    this.modalErrorMessage = '';
     // Optionally scroll to top or focus on something
+  }
+
+  onRetryVote(): void {
+    this.showConfirmationModal = false;
+    this.modalErrorMessage = '';
+
+    // Retry the vote with the same nominee
+    if (this.selectedNominee) {
+      // Small delay to ensure modal is closed before retrying
+      setTimeout(() => {
+        this.vote(this.selectedNominee.id);
+      }, 100);
+    }
   }
 
   private isValidUuid(id: string): boolean {

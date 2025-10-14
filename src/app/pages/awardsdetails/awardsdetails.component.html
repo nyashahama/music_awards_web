@@ -22,17 +22,43 @@
       </p>
     </div>
 
-    <!-- Error Message -->
-    @if (errorMessage) {
+    <!-- Error Message (for non-modal errors) -->
+    @if (errorMessage && !showConfirmationModal) {
       <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
-        <!-- ... error message content remains the same ... -->
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm text-red-700">
+              {{ errorMessage }}
+            </p>
+          </div>
+        </div>
       </div>
     }
 
     <!-- Voting Progress -->
     @if (isLoggedIn) {
       <div class="mb-8 bg-gray-100 p-4 rounded-lg">
-        <!-- ... progress bar content remains the same ... -->
+        <div class="flex justify-between mb-2">
+          <span class="font-medium">Your voting progress</span>
+          <span>{{ completedCategories }}/{{ totalCategories }} categories</span>
+        </div>
+        <div class="h-2 bg-gray-300 rounded-full">
+          <div class="h-full bg-green-600 rounded-full"
+               [style.width.%]="(completedCategories/totalCategories)*100"></div>
+        </div>
+        <div class="mt-4 text-sm">
+          @if (availableVotes > 0) {
+            <span>You have {{ availableVotes }} {{ availableVotes === 1 ? 'vote' : 'votes' }} remaining</span>
+          }
+          @if (availableVotes === 0) {
+            <span class="text-red-600">You've used all your votes!</span>
+          }
+        </div>
       </div>
     }
 
@@ -82,7 +108,11 @@
 
     @if (!loading && nominees.length === 0) {
       <div class="text-center py-12">
-        <!-- ... no nominees content remains the same ... -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h3 class="mt-4 text-lg font-medium text-gray-900">No nominees found</h3>
+        <p class="mt-1 text-gray-500">There are currently no nominees for this category.</p>
       </div>
     }
   </div>
@@ -90,12 +120,15 @@
   <!-- Vote Confirmation Modal -->
   @if (showConfirmationModal && selectedNominee) {
     <app-vote-confirmation-modal
-      [categoryName]="category?.name || 'this category'"
+      [success]="modalSuccess"
+      [categoryName]="category?.name || ''"
       [nomineeName]="selectedNominee.name"
-      [nomineeImage]="selectedNominee.imageUrl || 'assets/placeholder-artist.jpg'"
+      [nomineeImage]="selectedNominee.imageUrl"
+      [errorMessage]="modalErrorMessage"
       (close)="onCloseModal()"
       (continueVoting)="onContinueVoting()"
-    ></app-vote-confirmation-modal>
+      (retry)="onRetryVote()">
+    </app-vote-confirmation-modal>
   }
 
   <app-news-letter></app-news-letter>
