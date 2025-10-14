@@ -1,0 +1,104 @@
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" (click)="onBackdropClick($event)">
+  <div class="bg-white rounded-lg max-w-md w-full mx-auto" (click)="$event.stopPropagation()">
+    <div class="p-6 text-center">
+
+      <!-- Success State -->
+      <ng-container *ngIf="success">
+        <!-- Success Icon -->
+        <div class="flex justify-center mb-4">
+          <svg class="h-16 w-16 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+
+        <!-- Title -->
+        <h3 class="text-2xl font-bold text-gray-900 mb-2">Vote Submitted!</h3>
+
+        <!-- Message -->
+        <p class="text-gray-600 mb-6">
+          Your vote for <span class="font-semibold">{{ nomineeName }}</span> in
+          <span class="font-semibold">{{ categoryName }}</span> has been recorded.
+        </p>
+
+        <!-- Nominee Image -->
+        <div class="flex justify-center mb-4">
+          <img
+            [src]="nomineeImage"
+            [alt]="nomineeName"
+            class="h-24 w-24 rounded-full object-cover border-4 border-green-100"
+          />
+        </div>
+
+        <!-- Nominee Name -->
+        <h4 class="text-lg font-medium text-gray-900 mb-2">{{ nomineeName }}</h4>
+        <p class="text-sm text-gray-500 mb-6">Your selected artist</p>
+
+        <!-- Success Action Buttons -->
+        <div class="flex gap-3">
+          <button
+            (click)="onContinueVoting()"
+            class="flex-1 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
+          >
+            Continue Voting
+          </button>
+          <button
+            routerLink="/awards"
+            class="flex-1 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
+          >
+            Back to Categories
+          </button>
+        </div>
+      </ng-container>
+
+      <!-- Error State -->
+      <ng-container *ngIf="!success">
+        <!-- Error Icon -->
+        <div class="flex justify-center mb-4">
+          <svg class="h-16 w-16 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+
+        <!-- Title -->
+        <h3 class="text-2xl font-bold text-gray-900 mb-2">Vote Failed</h3>
+
+        <!-- Error Message -->
+        <p class="text-gray-600 mb-6">
+          {{ errorMessage }}
+        </p>
+
+        <!-- Nominee Info (Optional) -->
+        <div *ngIf="nomineeName && nomineeImage" class="mb-6">
+          <div class="flex justify-center mb-3">
+            <img
+              [src]="nomineeImage"
+              [alt]="nomineeName"
+              class="h-20 w-20 rounded-full object-cover border-4 border-red-100 opacity-75"
+            />
+          </div>
+          <p class="text-sm text-gray-500">
+            Attempted vote for <span class="font-semibold">{{ nomineeName }}</span>
+            <span *ngIf="categoryName"> in {{ categoryName }}</span>
+          </p>
+        </div>
+
+        <!-- Error Action Buttons -->
+        <div class="flex gap-3">
+          <button
+            (click)="onClose()"
+            class="flex-1 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+          >
+            Close
+          </button>
+          <button
+            (click)="onRetry()"
+            class="flex-1 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </ng-container>
+
+    </div>
+  </div>
+</div>
