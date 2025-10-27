@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RegisterPayload } from '../../models/Register.payload';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, shareReplay, tap } from 'rxjs';
 import { LoginPayload } from '../../models/Login.payload';
 
 @Injectable({
@@ -13,6 +13,10 @@ export class AuthService {
   private readonly TOKEN_KEY = 'jwt_token';
   private currentUserSubject = new BehaviorSubject<string | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
+
+  // Cache for user profiles (cache by user ID)
+  private userProfileCache = new Map<string, Observable<any>>();
+  private allUsersCache$: Observable<any> | null = null;
 
   constructor(private http: HttpClient) {
     const token = this.getToken();
@@ -33,34 +37,58 @@ export class AuthService {
       .post<{ token: string }>(`${this.apiUrl}/login`, payload)
       .pipe(
         tap((response) => {
-          // save to localStorage (or sessionStorage)
           localStorage.setItem(this.TOKEN_KEY, response.token);
           this.currentUserSubject.next(this.getCurrentUser());
+          this.clearUserCache(); // Clear cache on login
         }),
       );
   }
 
   getCurrentProfile(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/profile`);
+    const currentUser = this.getCurrentUser();
+    if (currentUser && !this.userProfileCache.has('current')) {
+      const profile$ = this.http.get(`${this.apiUrl}/profile`).pipe(
+        shareReplay(1)
+      );
+      this.userProfileCache.set('current', profile$);
+    }
+    return this.userProfileCache.get('current')!;
   }
 
   getUserProfile(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/profile/${id}`);
+    if (!this.userProfileCache.has(id)) {
+      const profile$ = this.http.get(`${this.apiUrl}/profile/${id}`).pipe(
+        shareReplay(1)
+      );
+      this.userProfileCache.set(id, profile$);
+    }
+    return this.userProfileCache.get(id)!;
   }
 
   listAllUsers(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/profile/users`);
+    if (!this.allUsersCache$) {
+      this.allUsersCache$ = this.http.get(`${this.apiUrl}/profile/users`).pipe(
+        shareReplay(1)
+      );
+    }
+    return this.allUsersCache$;
   }
 
   updateUserProfile(id: string, data: any): Observable<any> {
+    this.clearUserCache();
+    this.userProfileCache.delete(id);
     return this.http.put(`${this.apiUrl}/profile/${id}`, data);
   }
 
   deleteUserProfile(id: string): Observable<any> {
+    this.clearUserCache();
+    this.userProfileCache.delete(id);
     return this.http.delete(`${this.apiUrl}/profile/${id}`);
   }
 
   promoteUser(id: string): Observable<any> {
+    this.clearUserCache();
+    this.userProfileCache.delete(id);
     return this.http.put(`${this.apiUrl}/profile/${id}`, {});
   }
 
@@ -82,6 +110,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     this.currentUserSubject.next(null);
+    this.clearUserCache();
   }
 
   getCurrentUser(): string | null {
@@ -96,5 +125,15 @@ export class AuthService {
       console.error('Error decoding token:', e);
       return null;
     }
+  }
+
+  // Clear cache methods
+  clearUserCache(): void {
+    this.userProfileCache.clear();
+    this.allUsersCache$ = null;
+  }
+
+  clearUserProfileCache(id: string): void {
+    this.userProfileCache.delete(id);
   }
 }

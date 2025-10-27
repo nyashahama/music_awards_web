@@ -107,10 +107,8 @@ export class AwardsdetailsComponent {
   }
 
   loadNominees(): void {
-    if(!this.isLoggedIn){
-      this.errorMessage = "Please login vote"
-      return;
-    }
+    if(this.isLoggedIn){
+
     this.nomineeService.getNomineesByCategory(this.categoryId).subscribe({
       next: (data) => {
         this.nominees = data.map((nominee: any) => ({
@@ -126,7 +124,12 @@ export class AwardsdetailsComponent {
         this.errorMessage = 'Failed to load nominees';
         this.loading = false;
       },
-    });
+    });}else{
+      this.errorMessage = "Please login vote";
+      this.loading = false;
+      return;
+
+    }
   }
 
   checkVoteStatus(): void {
@@ -223,17 +226,17 @@ export class AwardsdetailsComponent {
       }, 100);
     }
   }
-
-  private isValidUuid(id: string): boolean {
-    const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    return uuidPattern.test(id);
-  }
-
-  private updateAvailableVotes(): void {
-    this.voteService.getAvailableVotes().subscribe({
-      next: (response) => {
-        console.log('Available votes:', response.available_votes);
-      },
-    });
-  }
+  //
+  // private isValidUuid(id: string): boolean {
+  //   const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  //   return uuidPattern.test(id);
+  // }
+  //
+  // private updateAvailableVotes(): void {
+  //   this.voteService.getAvailableVotes().subscribe({
+  //     next: (response) => {
+  //       console.log('Available votes:', response.available_votes);
+  //     },
+  //   });
+  // }
 }
