@@ -6,13 +6,24 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { AuthService } from '../../cores/services/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
+import { AuthService } from '../../cores/services/auth.service';
+import { HeaderComponent } from '../header/header.component';
+import { FooterComponent } from '../footer/footer.component';
 @Component({
   selector: 'app-register',
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, RouterModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule,
+    MatSnackBarModule,
+    HeaderComponent,
+    FooterComponent
+  ],
   templateUrl: './register.component.html',
   styleUrls: [],
 })
@@ -24,7 +35,8 @@ export class RegisterComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {
     this.registerForm = this.fb.group(
       {
@@ -70,13 +82,21 @@ export class RegisterComponent {
 
     this.authService.register(userData).subscribe({
       next: () => {
-        // Redirect to login
+        this.snackBar.open('Account created successfully! Please login.', 'Close', {
+          duration: 5000,
+          verticalPosition: 'top',
+          panelClass: ['snack-success']
+        });
         this.router.navigate(['/login']);
-        this.loading = false;
       },
       error: (err) => {
         this.errorMsg =
           err.error?.message || 'Registration failed. Please try again.';
+        this.snackBar.open(this.errorMsg, 'Close', {
+          duration: 5000,
+          verticalPosition: 'top',
+          panelClass: ['snack-error'],
+        });
         this.loading = false;
       },
     });

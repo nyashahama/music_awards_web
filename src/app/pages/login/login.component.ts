@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import {
   FormBuilder,
-  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
@@ -9,12 +8,22 @@ import {
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { CommonModule } from '@angular/common';
 
 import { AuthService } from '../../cores/services/auth.service';
-
+import { HeaderComponent } from '../header/header.component';
+import { FooterComponent } from '../footer/footer.component';
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, ReactiveFormsModule, RouterModule, MatSnackBarModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule,
+    MatSnackBarModule,
+    HeaderComponent,
+    FooterComponent
+  ],
   templateUrl: './login.component.html',
   styleUrls: [],
 })
@@ -26,7 +35,7 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private snackBar: MatSnackBar, // ← inject MatSnackBar
+    private snackBar: MatSnackBar,
     private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
@@ -40,11 +49,17 @@ export class LoginComponent {
     return emailRegex.test(value);
   }
 
-
   signIn() {
-    if (this.loginForm.invalid) return;
+    if (this.loginForm.invalid) {
+      Object.values(this.loginForm.controls).forEach(control => {
+        control.markAsTouched();
+      });
+      return;
+    }
 
     this.loading = true;
+    this.errorMsg = '';
+
     const { loginIdentifier, password } = this.loginForm.value;
     const payload = this.isEmail(loginIdentifier)
       ? { email: loginIdentifier, password }
@@ -55,6 +70,7 @@ export class LoginComponent {
         this.snackBar.open('Welcome back!', 'Close', {
           duration: 3000,
           verticalPosition: 'top',
+          panelClass: ['snack-success']
         });
         const token = res.token;
         console.log('JWT Token:', token);
