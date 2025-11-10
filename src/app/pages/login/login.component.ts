@@ -62,7 +62,7 @@ export class LoginComponent {
       },
       error: err => {
         this.errorMsg =
-          err.error?.message || 'Login failed. Please check your credentials.';
+          err.error?.message || 'Login failed. Please check your login details.';
         this.snackBar.open(this.errorMsg, 'Close', {
           duration: 5000,
           verticalPosition: 'top',

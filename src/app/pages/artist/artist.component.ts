@@ -20,16 +20,48 @@ import { NomineeService } from '../../cores/services/nominee.service';
     RouterLink,
   ],
   templateUrl: './artist.component.html',
+  styles: [`
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-fade-in {
+      animation: fade-in 0.6s ease-out forwards;
+    }
+
+    :host ::ng-deep article {
+      animation: fade-in 0.6s ease-out forwards;
+      opacity: 0;
+    }
+  `],
 })
 export class ArtistComponent implements OnInit, OnDestroy {
-
-  //to check if we still up
   nominees: Nominee[] = [];
   errorMessage: string = '';
   loading: boolean = true;
   private subscription: Subscription = new Subscription();
 
-  constructor(private nomineeService: NomineeService) {}
+  constructor(private nomineeService: NomineeService) { }
 
   ngOnInit(): void {
     this.loadNominees();
@@ -47,7 +79,7 @@ export class ArtistComponent implements OnInit, OnDestroy {
       next: (data: Nominee[]) => {
         this.nominees = data;
         this.loading = false;
-        console.log('Nominees loaded:', data); // Debug log
+        console.log('Nominees loaded:', data);
       },
       error: (error) => {
         console.error('Error loading nominees:', error);
@@ -62,31 +94,26 @@ export class ArtistComponent implements OnInit, OnDestroy {
   onImageError(event: any): void {
     console.log('Image failed to load:', event.target.src);
 
-    // Fix: Handle Google image links
     if (event.target.src.includes('images.app.goo.gl')) {
       event.target.src = '/assets/placeholder-artist.png';
     } else {
-      // Retry with placeholder
       event.target.src = '/assets/placeholder-artist.png';
     }
   }
-  // Helper method to get a safe image URL
+
   getSafeImageUrl(imageUrl: string | null | undefined): string {
     if (!imageUrl) {
       return '/assets/placeholder-artist.png';
     }
 
-    // Handle Google image URLs
     if (imageUrl.includes('images.app.goo.gl')) {
       return '/assets/placeholder-artist.png';
     }
 
-    // Handle absolute URLs
     if (imageUrl.startsWith('http')) {
       return imageUrl;
     }
 
-    // Handle relative paths
     const baseUrl = 'https://music-awards-api.onrender.com';
     return imageUrl.startsWith('/')
       ? `${baseUrl}${imageUrl}`

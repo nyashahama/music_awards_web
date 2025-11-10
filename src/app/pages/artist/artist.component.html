@@ -1,71 +1,83 @@
-<div class="bg-white">
+<div class="bg-gray-900 min-h-screen">
   <app-header activeLink="artists"></app-header>
-  <div class="relative isolate px-6 pt-14 lg:px-8">
-    <!-- Background decoration -->
-    <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
-      <svg
-        class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
-        viewBox="0 0 1155 678" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path fill="url(#45de2b6b-92d5-4d68-a6a0-9b9b2abad533)" fill-opacity=".3"
-          d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307-1.847 2.61-3.725 3.909-5.634C571.667 81.49 651.391 0 716.055 0c90.493 0 130.257 113.314 91.825 201.905-33.652 77.52-101.625 134.63-198.349 171.804C515.456 405.614 334.189 503.726 317.219 518.975z" />
-        <defs>
-          <linearGradient id="45de2b6b-92d5-4d68-a6a0-9b9b2abad533" x1="1155.49" x2="-78.208" y1=".177" y2="474.645"
-            gradientUnits="userSpaceOnUse">
-            <stop stop-color="#9089FC" />
-            <stop offset="1" stop-color="#FF80B5" />
-          </linearGradient>
-        </defs>
-      </svg>
+
+  <div class="relative isolate px-6 pt-24 lg:px-8">
+    <!-- Background effects -->
+    <div class="absolute inset-0 -z-10 bg-gradient-to-br from-gray-900 via-green-900/10 to-gray-900"></div>
+    <div class="absolute inset-0 -z-10">
+      <div class="absolute -top-40 -left-40 w-80 h-80 bg-green-500/10 rounded-full blur-3xl animate-float"></div>
+      <div class="absolute -bottom-40 -right-40 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl animate-float" style="animation-delay: 2s;"></div>
     </div>
 
     <div class="mx-auto max-w-7xl py-24 sm:py-32">
-      <div class="text-center mb-16">
-        <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-          Featured Artists
+      <div class="text-center mb-20 animate-fade-in">
+        <h1 class="text-5xl font-bold tracking-tight text-white sm:text-6xl">
+          Featured <span class="bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">Artists</span>
         </h1>
-        <p class="mt-6 text-lg leading-8 text-gray-600">
+        <p class="mt-6 text-xl leading-8 text-gray-300 max-w-3xl mx-auto">
           Discover the voices shaping Zimbabwe's dancehall revolution
         </p>
       </div>
 
       <!-- Loading/Error states -->
       @if (errorMessage) {
-      <div class="text-center text-red-600 p-4 bg-red-50 rounded-lg border border-red-200">
-        {{ errorMessage }}
+      <div class="text-center text-red-400 p-6 bg-red-900/20 rounded-2xl border border-red-800/50 backdrop-blur-sm mb-8 animate-fade-in">
+        <div class="flex items-center justify-center space-x-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span>{{ errorMessage }}</span>
+        </div>
       </div>
       } @else if (loading) {
-      <div class="text-center p-8">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mb-4"></div>
-        <p class="text-gray-600">Loading artists...</p>
+      <div class="text-center p-12 animate-fade-in">
+        <div class="relative inline-block">
+          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-400"></div>
+          <div class="absolute inset-0 animate-ping rounded-full h-12 w-12 border-2 border-green-400/50"></div>
+        </div>
+        <p class="mt-4 text-gray-400">Loading artists...</p>
       </div>
       }
 
-      <!-- Nominees grid -->
+      <!-- Artists grid -->
       @if (!loading && nominees.length > 0) {
-      <div
-        class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-        @for (nominee of nominees; track nominee.id) {
-        <article
-          class="flex flex-col items-center rounded-xl bg-white p-6 shadow-lg ring-1 ring-gray-200 hover:shadow-xl transition-shadow duration-300">
-          <div class="relative">
-            <img class="h-48 w-48 rounded-full object-cover ring-4 ring-white shadow-lg"
-              [src]="getSafeImageUrl(nominee.imageUrl)" [alt]="nominee.name" (error)="onImageError($event)"
-              loading="lazy" />
-          </div>
-          <h3 class="mt-6 text-lg font-semibold leading-8 tracking-tight text-gray-900 text-center">
-            {{ nominee.name }}
-          </h3>
-          <p class="text-base leading-7 text-gray-600 text-center mt-2">
-            {{ nominee.description || "Zimdancehall artist" }}
-          </p>
-          <div class="mt-6 flex gap-x-4">
-            <a [routerLink]="['/artist', nominee.id]"
-              class="inline-flex items-center px-4 py-2 text-sm font-medium text-green-600 bg-green-50 rounded-md hover:bg-green-100 hover:text-green-700 transition-colors duration-200">
-              View Profile
-              <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-            </a>
+      <div class="mx-auto grid max-w-2xl grid-cols-1 gap-8 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3 animate-fade-in">
+        @for (nominee of nominees; track nominee.id; let i = $index) {
+        <article class="group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 hover:border-green-400/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl"
+                 [style.animation-delay]="0.1 * i + 's'">
+          <!-- Background glow effect -->
+          <div class="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+          <div class="relative flex flex-col items-center">
+            <!-- Artist Image -->
+            <div class="relative mb-6">
+              <div class="absolute inset-0 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+              <img class="relative h-48 w-48 rounded-full object-cover ring-4 ring-gray-700 group-hover:ring-green-400 shadow-2xl transition-all duration-300"
+                [src]="getSafeImageUrl(nominee.imageUrl)"
+                [alt]="nominee.name"
+                (error)="onImageError($event)"
+                loading="lazy" />
+            </div>
+
+            <!-- Artist Info -->
+            <h3 class="text-xl font-bold text-white text-center group-hover:text-green-300 transition-colors duration-300">
+              {{ nominee.name }}
+            </h3>
+            <p class="text-gray-400 text-center mt-3 leading-relaxed">
+              {{ nominee.description || "Zimdancehall artist" }}
+            </p>
+
+            <!-- View Profile Button -->
+            <div class="mt-6 flex justify-center">
+              <a [routerLink]="['/artist', nominee.id]"
+                 class="group/btn relative inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300">
+                <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-green-600 to-emerald-700 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                <span class="relative">View Profile</span>
+                <svg class="ml-2 h-4 w-4 relative group-hover/btn:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </a>
+            </div>
           </div>
         </article>
         }
@@ -73,29 +85,33 @@
       }
 
       @if (!loading && nominees.length === 0 && !errorMessage) {
-      <div class="text-center p-8">
-        <p class="text-gray-600">No artists found.</p>
+      <div class="text-center p-12 animate-fade-in">
+        <div class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50">
+          <svg class="w-16 h-16 text-gray-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"/>
+          </svg>
+          <h3 class="text-xl font-semibold text-white mb-2">No Artists Found</h3>
+          <p class="text-gray-400">Check back later for featured artists.</p>
+        </div>
       </div>
       }
-    </div>
 
-    <!-- Bottom background decoration -->
-    <div
-      class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
-      aria-hidden="true">
-      <svg
-        class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
-        viewBox="0 0 1155 678" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path fill="url(#ecb5b0c9-546c-4772-8c71-4d3f06d544bc)" fill-opacity=".3"
-          d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307-1.847 2.61-3.725 3.909-5.634C571.667 81.49 651.391 0 716.055 0c90.493 0 130.257 113.314 91.825 201.905-33.652 77.52-101.625 134.63-198.349 171.804C515.456 405.614 334.189 503.726 317.219 518.975z" />
-        <defs>
-          <linearGradient id="ecb5b0c9-546c-4772-8c71-4d3f06d544bc" x1="1155.49" x2="-78.208" y1=".177" y2="474.645"
-            gradientUnits="userSpaceOnUse">
-            <stop stop-color="#9089FC" />
-            <stop offset="1" stop-color="#FF80B5" />
-          </linearGradient>
-        </defs>
-      </svg>
+      <!-- CTA Section -->
+      <div class="mt-20 text-center animate-fade-in" style="animation-delay: 0.3s;">
+        <div class="bg-gradient-to-r from-green-500/10 to-emerald-600/20 rounded-3xl p-8 border border-green-500/20">
+          <h2 class="text-2xl font-bold text-white mb-4">Join the Movement</h2>
+          <p class="text-gray-300 mb-6 max-w-2xl mx-auto">
+            Stay updated with the latest from Zimbabwe's dancehall scene. Subscribe to our newsletter for exclusive content.
+          </p>
+          <a href="#newsletter"
+            class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold hover:shadow-xl hover:scale-105 transition-all duration-300">
+            Subscribe Now
+            <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+            </svg>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 
